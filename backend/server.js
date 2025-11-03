@@ -18,19 +18,19 @@ app.post("/api/sync", async (req, res) => {
   }
 
   // Procura o utilizador na base de dados
-  let user = await prisma.user.findUnique({ where: { clerkId } });
+  let Professor = await prisma.Professor.findUnique({ where: { clerkId } });
 
   // Se não existir, cria um novo
-  if (!user) {
-    user = await prisma.user.create({
+  if (!Professor) {
+    Professor = await prisma.Professor.create({
       data: { clerkId},
     });
-    console.log("Novo professor criado:", user.id);
+    console.log("Novo professor criado:", Professor.id);
   } else {
-    console.log("Professor já existe:", user.id);
+    console.log("Professor já existe:", Professor.id);
   }
 
-  res.json(user);
+  res.json(Professor);
 });
 
 

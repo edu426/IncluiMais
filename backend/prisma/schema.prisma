@@ -18,6 +18,8 @@ model Alunos{
   nome      String
   turma     String
   professorId String
+  email     String
+  notas     String
   professor   Professor @relation(fields: [professorId], references: [id])
 
 }

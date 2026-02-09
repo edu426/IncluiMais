@@ -5,11 +5,12 @@ import './index.css'
 import Home from './assets/pages/Home.tsx'
 import MainHeader from "./assets/layouts/MainHeader.tsx"
 import Dashboard from "./assets/pages/App/Dashboard.tsx"
+import ExcelTest from "./assets/pages/ExcelTest.tsx"
 import { ClerkProvider } from "@clerk/clerk-react"
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
-if(!PUBLISHABLE_KEY) {
+if (!PUBLISHABLE_KEY) {
   throw new Error("Pusblieshable key (Clerk) is missing or invalid.");
 }
 
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<MainHeader />}>
             <Route index element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/excel-test" element={<ExcelTest />} />
           </Route>
         </Routes>
       </BrowserRouter>

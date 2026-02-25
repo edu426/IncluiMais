@@ -6,7 +6,7 @@
     align-items: center;
     border-radius: 20px;
     margin: 2rem 5% 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .logo-container {
@@ -37,6 +37,7 @@
     font-size: 1.8rem;
     font-weight: 700;
     color: #1a1a1a;
+    text-decoration: none;
 }
 
 .nav-right {
@@ -70,46 +71,46 @@
     border: 2px solid #1a1a1a;
 }
 
-    .btn-outline:hover {
-        background-color: rgba(0,0,0,0.05);
-    }
+.btn-outline:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
 .btn-primary {
     background-color: #1a1a1a;
     color: white;
 }
 
-    .btn-primary:hover {
-        background-color: #333;
-        transform: translateY(-2px);
-    }
+.btn-primary:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
 
-            .footer {
-            background-color: #f5f0d8;
-            padding: 3rem 5% 2rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
+.footer {
+    background-color: #f5f0d8;
+    padding: 3rem 5% 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-bottom: 2rem;
-        }
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
 
-        .footer-link {
-            color: #1a1a1a;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-        }
+.footer-link {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+}
 
-        .footer-link:hover {
-            text-decoration: underline;
-        }
+.footer-link:hover {
+    text-decoration: underline;
+}
 
-        .footer-credit {
-            text-align: center;
-            color: #666;
-            font-size: 0.95rem;
-        }
+.footer-credit {
+    text-align: center;
+    color: #666;
+    font-size: 0.95rem;
+}

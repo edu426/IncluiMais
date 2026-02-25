@@ -1,0 +1,118 @@
+/* Container */
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Loading */
+.loading {
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+/* Titles */
+.title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+/* Messages */
+.error-box {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fee;
+    border: 1px solid #faa;
+    border-radius: 4px;
+    color: #c00;
+}
+
+.success-box {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #efe;
+    border: 1px solid #afa;
+    border-radius: 4px;
+    color: #060;
+}
+
+/* Buttons */
+.button-group {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+    color: white;
+}
+
+.btn-green {
+    background-color: #10b981;
+}
+
+.btn-green:hover {
+    background-color: #059669;
+}
+
+.btn-purple {
+    background-color: #8b5cf6;
+}
+
+.btn-purple:hover {
+    background-color: #7c3aed;
+}
+
+/* Table */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.student-table thead tr {
+    background-color: #f9fafb;
+}
+
+.student-table th {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: bold;
+    color: #374151;
+}
+
+.student-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #6b7280;
+}
+
+.row-even {
+    background-color: white;
+}
+
+.row-odd {
+    background-color: #f9fafb;
+}

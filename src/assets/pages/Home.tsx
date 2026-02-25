@@ -1,6 +1,7 @@
 
 import './Home.css'
 import Dashboard from './App/Dashboard';
+import ExcelTest from './App/ExcelTest';
 import { Link } from 'react-router-dom';
 
 function Home() {
@@ -13,7 +14,7 @@ function Home() {
                     <Link to="/dashboard" className="btn btn-hero">Entrar na aplicação</Link>
                 </div>
                 <div className="hero-image">
-                    <img src="src/assets/laptop.png" />
+                    <img src="src/assets/images/laptop.png" />
                 </div>
             </section>
 
@@ -40,7 +41,7 @@ function Home() {
                 </div>
             </section>
         </div>
-  );
+    );
 }
 
 export default Home;

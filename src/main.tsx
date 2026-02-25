@@ -5,7 +5,7 @@ import './index.css'
 import Home from './assets/pages/Home.tsx'
 import MainHeader from "./assets/layouts/MainHeader.tsx"
 import Dashboard from "./assets/pages/App/Dashboard.tsx"
-import ExcelTest from "./assets/pages/ExcelTest.tsx"
+import ExcelTest from "./assets/pages/App/ExcelTest.tsx"
 import { ClerkProvider } from "@clerk/clerk-react"
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;

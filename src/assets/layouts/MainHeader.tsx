@@ -15,7 +15,7 @@ function MainHeader() {
                 </div>
             </nav>
 
-            <main style={{ padding: "2rem" }}>
+            <main>
                 <Outlet />
             </main>
 

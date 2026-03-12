@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { Link } from 'react-router-dom';
 import './ExcelTest.css';
+import IsLoggedIn from '../../functions/IsLoggedIn';
 
 interface Student {
     id: string;
@@ -99,37 +100,38 @@ export default function ExcelTest() {
     }
 
     return (
-        <div className="container">
-            <h1 className="title">
-                Excel Export — Real DB Data
-            </h1>
+        <IsLoggedIn>
+            <div className="container">
+                <h1 className="title">
+                    Excel Export — Real DB Data
+                </h1>
 
-            {/* Error message */}
-            {error && (
-                <div className="error-box">
-                    {error}
-                </div>
-            )}
+                {/* Error message */}
+                {error && (
+                    <div className="error-box">
+                        {error}
+                    </div>
+                )}
 
-            {/* Status message */}
-            {message && (
-                <div className="success-box">
-                    {message}
-                </div>
-            )}
+                {/* Status message */}
+                {message && (
+                    <div className="success-box">
+                        {message}
+                    </div>
+                )}
 
-            {/* Export buttons */}
-            <div className="button-group">
-                <button
-                    onClick={exportToExcel}
-                    className="btn btn-green"
-                >
-                    Export All Data
-                </button>
+                {/* Export buttons */}
+                <div className="button-group">
+                    <button
+                        onClick={exportToExcel}
+                        className="btn btn-green"
+                    >
+                        Export All Data
+                    </button>
 
 
-                {/* Exportar com colunas personalizadas (ainda não implementado/exemplo) */}
-                {/*
+                    {/* Exportar com colunas personalizadas (ainda não implementado/exemplo) */}
+                    {/*
                 <button
                     onClick={exportCustomColumns}
                     style={{
@@ -149,51 +151,51 @@ export default function ExcelTest() {
                     Export Custom (ID, Nome, Email, Turma)
                 </button>
 */}
-                <button
-                    onClick={refreshData}
-                    className="btn btn-purple"
-                >
-                    Atualizar dados
-                </button>
-            </div>
+                    <button
+                        onClick={refreshData}
+                        className="btn btn-purple"
+                    >
+                        Atualizar dados
+                    </button>
+                </div>
 
-            {/* Student table */}
-            <h2 className="subtitle">
-                Alunos da base de dados ({students.length})
-            </h2>
+                {/* Student table */}
+                <h2 className="subtitle">
+                    Alunos da base de dados ({students.length})
+                </h2>
 
-            <div className="table-wrapper">
-                <table className="student-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Email</th>
-                            <th>Turma</th>
-                            <th>Notas</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {students.map((student) => (
-                            <tr key={student.id}>
-                                <td>{student.id}</td>
-                                <td>{student.nome}</td>
-                                <td>{student.email}</td>
-                                <td>{student.turma}</td>
-                                <td>{student.notas}</td>
-                                <td>
-                                    <Link to={`/ver-aluno/${student.id}`} className="btn btn-view">
-                                        Ver
-                                    </Link>
-                                </td>
+                <div className="table-wrapper">
+                    <table className="student-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Turma</th>
+                                <th>Notas</th>
+                                <th>Ações</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {students.map((student) => (
+                                <tr key={student.id}>
+                                    <td>{student.id}</td>
+                                    <td>{student.nome}</td>
+                                    <td>{student.email}</td>
+                                    <td>{student.turma}</td>
+                                    <td>{student.notas}</td>
+                                    <td>
+                                        <Link to={`/ver-aluno/${student.id}`} className="btn btn-view">
+                                            Ver
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-            {/* Instruções por fazer
+                {/* Instruções por fazer
             <div style={{
                 marginTop: '2rem',
                 padding: '1rem',
@@ -209,6 +211,7 @@ export default function ExcelTest() {
                 </ul>
             </div>
             */}
-        </div>
+            </div>
+        </IsLoggedIn>
     );
 }

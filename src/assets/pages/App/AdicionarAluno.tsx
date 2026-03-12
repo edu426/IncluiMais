@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import './AdicionarAluno.css';
+import IsLoggedIn from '../../functions/IsLoggedIn';
 
 export default function AdicionarAluno() {
     const { user } = useUser();
@@ -72,73 +73,75 @@ export default function AdicionarAluno() {
     };
 
     return (
-        <div className="add-student-page">
-            <Link to="/dashboard" className="back-link">← Voltar ao Dashboard</Link>
+        <IsLoggedIn>
+            <div className="add-student-page">
+                <Link to="/dashboard" className="back-link">← Voltar ao Dashboard</Link>
 
-            <h1>Adicionar Aluno</h1>
-            <p className="subtitle">Preenche os dados para adicionar um novo aluno à base de dados.</p>
+                <h1>Adicionar Aluno</h1>
+                <p className="subtitle">Preenche os dados para adicionar um novo aluno à base de dados.</p>
 
-            <div className="add-student-card">
-                <form className="add-student-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="nome">Nome</label>
-                        <input
-                            id="nome"
-                            name="nome"
-                            type="text"
-                            placeholder="Ex: João Silva"
-                            value={form.nome}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                <div className="add-student-card">
+                    <form className="add-student-form" onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="nome">Nome</label>
+                            <input
+                                id="nome"
+                                name="nome"
+                                type="text"
+                                placeholder="Ex: João Silva"
+                                value={form.nome}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="Ex: joao@escola.pt"
-                            value={form.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="Ex: joao@escola.pt"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="turma">Turma</label>
-                        <input
-                            id="turma"
-                            name="turma"
-                            type="text"
-                            placeholder="Ex: 10A"
-                            value={form.turma}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="turma">Turma</label>
+                            <input
+                                id="turma"
+                                name="turma"
+                                type="text"
+                                placeholder="Ex: 10A"
+                                value={form.turma}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="notas">Notas</label>
-                        <textarea
-                            id="notas"
-                            name="notas"
-                            placeholder="Ex: 15, 18, 12..."
-                            value={form.notas}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="notas">Notas</label>
+                            <textarea
+                                id="notas"
+                                name="notas"
+                                placeholder="Ex: 15, 18, 12..."
+                                value={form.notas}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                    <button type="submit" className="btn-submit" disabled={loading}>
-                        {loading ? 'A guardar...' : 'Adicionar Aluno'}
-                    </button>
-                </form>
+                        <button type="submit" className="btn-submit" disabled={loading}>
+                            {loading ? 'A guardar...' : 'Adicionar Aluno'}
+                        </button>
+                    </form>
 
-                {success && <div className="feedback-success">{success}</div>}
-                {error && <div className="feedback-error">{error}</div>}
+                    {success && <div className="feedback-success">{success}</div>}
+                    {error && <div className="feedback-error">{error}</div>}
+                </div>
             </div>
-        </div>
+        </IsLoggedIn>
     );
 }

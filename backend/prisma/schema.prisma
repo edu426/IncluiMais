@@ -20,6 +20,18 @@ model Alunos{
   professorId String
   email     String
   notas     String
+  presenca  Presenca[]
   professor   Professor @relation(fields: [professorId], references: [id])
 
 }
+
+model Presenca{
+  id        String   @id @default(cuid())
+  alunoId   String
+  data      DateTime @default(now())
+  presente  Boolean
+  justifica Boolean
+  aluno     Alunos @relation(fields: [alunoId], references: [id])
+}
+
+//professorId deve ser irrelevante

@@ -41,7 +41,7 @@ app.post("/api/sync", async (req, res) => {
   res.json(Professor);
 });
 
-
+//-------------Criação de dados-------------
 // POST criar novo aluno
 app.post("/api/alunos", async (req, res) => {
   const { nome, turma, email, notas, professorId } = req.body;
@@ -60,6 +60,25 @@ app.post("/api/alunos", async (req, res) => {
   }
 });
 
+// POST criar nova presenca
+app.post("/api/presenca", async (req, res) => {
+  const { alunoId, data, presente, justifica } = req.body;
+
+  if (!alunoId || !data || !presente || !justifica) {
+    return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+  }
+
+  try {
+    const presenca = await prisma.Presenca.create({
+      data: { alunoId, data, presente, justifica },
+    });
+    res.status(201).json(presenca);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao registar presenca." });
+  }
+});
+
+//-------------Testes-------------
 // GET todos os alunos (para testes/admin)
 app.get("/api/alunos", async (req, res) => {
   try {
@@ -73,6 +92,22 @@ app.get("/api/alunos", async (req, res) => {
   }
 });
 
+app.get("/api/presenca", async (req, res) => {
+  try {
+    const presenca = await prisma.Presenca.findMany({
+      include: { aluno: true }
+    });
+    res.json(presenca);
+  } catch (error) {
+    console.error("Erro ao buscar presencas:", error);
+    res.status(500).json({ error: "Erro ao buscar presencas" });
+  }
+});
+
+
+
+
+//-------------Atualização de dados-------------
 // PUT atualizar aluno pelo ID
 // Chamado pelo EditarAluno.tsx quando o utilizador clica em "Guardar" depois de editar
 app.put("/api/alunos/:id", async (req, res) => {
@@ -98,6 +133,10 @@ app.put("/api/alunos/:id", async (req, res) => {
   }
 });
 
+
+
+
+//-------------Busca de dados-------------
 // GET um aluno pelo ID
 // Chamado pelo EditarAluno.tsx na página de carregamento para buscar os detalhes completos de um único aluno
 app.get("/api/alunos/detalhe/:id", async (req, res) => {

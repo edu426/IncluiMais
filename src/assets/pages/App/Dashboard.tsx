@@ -1,6 +1,5 @@
 import { useUser } from "@clerk/clerk-react";
 import { useEffect } from "react";
-import { redirect } from "react-router-dom";
 import './Dashboard.css'
 import IsLoggedIn from "../../functions/IsLoggedIn";
 import { Link } from "react-router-dom";
@@ -39,6 +38,7 @@ function Dashboard() {
                         <h1>Bem vindo {user?.firstName}</h1>
                         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                             <Link to="/adicionar-aluno" className="btn btn-hero">+ Adicionar Aluno</Link>
+                            <Link to="/ver-todos-alunos" className="btn btn-hero" style={{ backgroundColor: 'transparent', border: '2px solid #1a1a1a', color: '#1a1a1a' }}>Ver Todos os Alunos</Link>
                             <Link to="/excel-test" className="btn btn-hero" style={{ backgroundColor: 'transparent', border: '2px solid #1a1a1a', color: '#1a1a1a' }}>Exportar para Excel</Link>
                         </div>
                     </div>

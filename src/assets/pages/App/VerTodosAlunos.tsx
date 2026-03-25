@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import IsLoggedIn from '../../functions/IsLoggedIn';
 import './VerAluno.css';
@@ -16,6 +16,10 @@ export default function VerTodosAluno() {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    // Search and filter state
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filterTurma, setFilterTurma] = useState('');
 
     // Fetch alunos do backend
     useEffect(() => {
@@ -36,6 +40,20 @@ export default function VerTodosAluno() {
         fetchStudents();
     }, []);
 
+    // Unique list of turmas for the filter dropdown
+    const turmas = useMemo(() =>
+        [...new Set(students.map(s => s.turma))].sort()
+    , [students]);
+
+    // Filtered list — updates instantly as user types or picks a turma
+    const filteredStudents = useMemo(() => {
+        return students.filter(s => {
+            const matchesName = s.nome.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesTurma = filterTurma === '' || s.turma === filterTurma;
+            return matchesName && matchesTurma;
+        });
+    }, [students, searchQuery, filterTurma]);
+
     if (loading) {
         return <div className="ver-aluno-loading"> A carregar informações do aluno...</div>;
     }
@@ -49,12 +67,46 @@ export default function VerTodosAluno() {
             <div className="ver-todos-page">
                 <Link to="/dashboard" className="back-link">← Voltar ao Dashboard</Link>
 
-                <h1>Todos os Alunos</h1>
+                <div className="ver-aluno-header">
+                    <div>
+                        <h1>Todos os Alunos</h1>
+                        <p className="subtitle">
+                            {filteredStudents.length === students.length
+                                ? `${students.length} aluno${students.length !== 1 ? 's' : ''} registado${students.length !== 1 ? 's' : ''}.`
+                                : `${filteredStudents.length} de ${students.length} alunos`}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Search and filter bar */}
+                <div className="search-bar">
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="🔍 Pesquisar por nome..."
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                    />
+                    <select
+                        className="filter-select"
+                        value={filterTurma}
+                        onChange={e => setFilterTurma(e.target.value)}
+                    >
+                        <option value="">Todas as Turmas</option>
+                        {turmas.map(t => (
+                            <option key={t} value={t}>{t}</option>
+                        ))}
+                    </select>
+                    {(searchQuery || filterTurma) && (
+                        <button className="btn-clear-filter" onClick={() => { setSearchQuery(''); setFilterTurma(''); }}>
+                            ✕ Limpar
+                        </button>
+                    )}
+                </div>
 
                 <div className="alunos-grid">
-                    {students.map((student) => (
+                    {filteredStudents.map((student) => (
                         <div className="aluno-card-mini" key={student.id}>
-
                             <div className="info-row">
                                 <span className="info-label">Nome</span>
                                 <span className="info-value">{student.nome}</span>
@@ -69,11 +121,15 @@ export default function VerTodosAluno() {
                                 <span className="info-label">Turma</span>
                                 <span className="info-value">{student.turma}</span>
                             </div>
-                            <Link to={`/editar-aluno/${student.id}`} className="btn btn-view">
+                            <Link to={`/editar-aluno/${student.id}`} className="btn-view">
                                 Editar
                             </Link>
                         </div>
                     ))}
+
+                    {filteredStudents.length === 0 && (
+                        <p className="faltas-empty">Nenhum aluno encontrado.</p>
+                    )}
                 </div>
             </div>
         </IsLoggedIn>

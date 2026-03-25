@@ -163,6 +163,13 @@ export default function EditarAluno() {
     const formatDate = (iso: string) =>
         new Date(iso).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
+    // Helper to get current datetime formatted for the input 'max' attribute
+    const getCurrentDateTimeLocal = () => {
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        return now.toISOString().slice(0, 16);
+    };
+
     // Conta o total de faltas para o resumo
     const totalFaltas = presencas.filter(p => !p.presente).length;
 
@@ -303,6 +310,7 @@ export default function EditarAluno() {
                                     type="datetime-local"
                                     className="edit-input"
                                     value={novaFalta.data}
+                                    max={getCurrentDateTimeLocal()}
                                     onChange={e => setNovaFalta({ ...novaFalta, data: e.target.value })}
                                 />
                             </div>

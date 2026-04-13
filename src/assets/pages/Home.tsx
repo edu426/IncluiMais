@@ -1,4 +1,3 @@
-
 import './Home.css'
 import { Link } from 'react-router-dom';
 import { useUser, SignInButton } from '@clerk/clerk-react';
@@ -8,44 +7,45 @@ function Home() {
 
     return (
         <div>
-
             <section className="hero">
                 <div className="hero-content">
-                    <h1>Bem-vindo ao SPHelp, o teu assistente digital para gerir alunos e turmas</h1>
-                    <p>Com SPHelp, gerir turmas e alunos nunca foi tão simples.</p>
-                    <p>Regista-te agora e experimenta a diferença!</p>
+                    <h1>A sua plataforma de<br />Gestão Educativa</h1>
+                    <p>Simplifique o dia a dia da educação especial. Faça a gestão das suas turmas, alunos, notas e assiduidade num único local, de forma simples e intuitiva.</p>
                     {isSignedIn ? (
-                        <Link to="/dashboard" className="btn btn-hero">Entrar na aplicação</Link>
+                        <Link to="/dashboard" className="btn-primary">Entrar na aplicação <i className="ri-arrow-right-line" style={{ verticalAlign: "middle", marginLeft: "8px" }}></i></Link>
                     ) : (
                         <SignInButton>
-                            <a className="btn btn-hero">Entrar na aplicação</a>
+                            <a className="btn-primary" style={{ cursor: "pointer" }}>Entrar na aplicação <i className="ri-arrow-right-line" style={{ verticalAlign: "middle", marginLeft: "8px" }}></i></a>
                         </SignInButton>
                     )}
                 </div>
                 <div className="hero-image">
-                    <img src="src/assets/images/laptop.png" />
+                    <img src="src/assets/images/laptop_early.png" alt="SPHelp Dashboard Preview" width="1899" height="886" />
                 </div>
             </section>
 
             <section className="features">
-                <h2>O que faz</h2>
                 <div className="features-grid">
                     <div className="feature-card">
-                        <i className="fa-solid fa-building-columns fa-3x"></i>
+                        <div className="feature-icon">
+                            <i className="ri-team-line"></i>
+                        </div>
                         <h3>Gestão de turmas</h3>
-                        <p>Cria e organiza as tuas turmas facilmente</p>
+                        <p>Organize facilmente as suas turmas e alunos de educação especial. Mantenha todas as informações vitais acessíveis.</p>
                     </div>
-
                     <div className="feature-card">
-                        <i className="fa-solid fa-clipboard fa-3x"></i>
+                        <div className="feature-icon">
+                            <i className="ri-file-edit-line"></i>
+                        </div>
                         <h3>Registo de notas e presenças</h3>
-                        <p>Tudo num só lugar</p>
+                        <p>Acompanhe o progresso contínuo. Registe avaliações e assiduidade de forma rápida para cada aluno.</p>
                     </div>
-
                     <div className="feature-card">
-                        <i className="fa-solid fa-table fa-3x"></i>
+                        <div className="feature-icon">
+                            <i className="ri-file-excel-2-line"></i>
+                        </div>
                         <h3>Exportação em Excel</h3>
-                        <p>Exporta dados com um clique</p>
+                        <p>Exporte todos os dados consolidados para formato Excel com um único clique para análises detalhadas.</p>
                     </div>
                 </div>
             </section>

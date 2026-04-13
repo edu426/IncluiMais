@@ -1,32 +1,46 @@
 import { Outlet } from 'react-router-dom';
 import './MainHeader.css'
-import { SignInButton } from '@clerk/clerk-react';
+import { SignInButton, useUser, UserButton } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
+
 function MainHeader() {
+    const { isSignedIn } = useUser();
+
     return (
         <div>
-            <nav className="navbar">
-                <Link to="/dashboard" className="logo-text">SPHelp</Link>
-                <div className="nav-right">
-                    <a className="nav-link">Ajuda</a>
-                    <SignInButton>
-                        <a className="btn btn-primary">Entrar</a>
-                    </SignInButton>
-                </div>
-            </nav>
+            <header>
+                <Link to="/dashboard" className="logo">
+                    <i className="ri-book-read-fill"></i>
+                    SPHelp
+                </Link>
+                <nav className="nav-links">
+                    <a className="nav-link" style={{cursor: "pointer"}}>Ajuda</a>
+                    {isSignedIn ? (
+                        <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+                            <Link to="/dashboard" className="btn-entrar">Dashboard</Link>
+                            <UserButton afterSignOutUrl="/"/>
+                        </div>
+                    ) : (
+                        <SignInButton>
+                            <a className="btn-entrar" style={{cursor: "pointer"}}>Entrar</a>
+                        </SignInButton>
+                    )}
+                </nav>
+            </header>
 
             <main>
                 <Outlet />
             </main>
 
-            <footer className="footer">
+            <footer>
                 <div className="footer-links">
-                    <a href="#" className="footer-link">Ajuda e Suporte</a>
-                    <a href="#" className="footer-link">Política de Privacidade</a>
-                    <a href="#" className="footer-link">Contacto</a>
+                    <a href="#">Ajuda e Suporte</a>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Contacto</a>
                 </div>
-                <div className="footer-credit">
-                    Desenvolvido por Eduardo Ramos
+                <div className="footer-info">
+                    <p>&copy; 2024 SPHelp. Todos os direitos reservados.</p>
+                    <p>Desenvolvido para apoiar os profissionais de Educação Especial.</p>
                 </div>
             </footer>
         </div>

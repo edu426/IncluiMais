@@ -1,24 +1,25 @@
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+:root {
+    --primary-color: #F8C301;
+    --primary-hover: #E0B000;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --bg-color: #FDFDFD;
+    --card-bg: #FFFFFF;
+    --border-color: #EFEFEF;
 }
 
-:root {
-  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #f5f0d8;
-  color: #1a1a1a;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    margin: 0 auto;
+    overflow-x: hidden;
+    min-width: 320px;
+    min-height: 100vh;
 }

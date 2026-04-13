@@ -532,4 +532,29 @@
 .btn-add-falta:hover {
     background-color: #edc84a;
     transform: translateY(-2px);
-}
+}
+
+/* Botão de lápis para editar justificação de uma falta */
+.btn-edit-falta {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+    opacity: 0.6;
+}
+
+.btn-edit-falta:hover {
+    background-color: #f5f0d8;
+    opacity: 1;
+}
+
+/* Botões de confirmar/cancelar dentro da row */
+.falta-inline-edit {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+}
+

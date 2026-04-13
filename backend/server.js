@@ -174,6 +174,26 @@ app.get("/api/presenca/:alunoId", async (req, res) => {
   }
 });
 
+// PUT atualizar uma presença (ex: marcar como justificada)
+app.put("/api/presenca/:id", async (req, res) => {
+  const { id } = req.params;
+  const { justifica } = req.body;
+
+  if (justifica == null) {
+    return res.status(400).json({ error: "Campo 'justifica' é obrigatório." });
+  }
+
+  try {
+    const registo = await prisma.Presenca.update({
+      where: { id },
+      data: { justifica },
+    });
+    res.json(registo);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao atualizar presença." });
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

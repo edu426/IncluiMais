@@ -56,6 +56,9 @@ export default function EditarAluno() {
     const [addingFalta, setAddingFalta] = useState(false);
     const [faltaMessage, setFaltaMessage] = useState('');
 
+    // ID da falta que está a ser editada inline (para justificar)
+    const [editingFaltaId, setEditingFaltaId] = useState<string | null>(null);
+
     // Fetch aos dados do aluno
     useEffect(() => {
         const fetchAluno = async () => {
@@ -171,9 +174,29 @@ export default function EditarAluno() {
         }
     };
 
-    // Formata a data ISO para DD/MM/YYYY
+    // Formats ISO date to DD/MM/YYYY
     const formatDate = (iso: string) =>
         new Date(iso).toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    // Envia um PUT para atualizar só o campo `justifica` de uma presença
+    const handleJustificar = async (presencaId: string, novoValor: boolean) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/presenca/${presencaId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ justifica: novoValor }),
+            });
+            if (!response.ok) throw new Error('Erro ao atualizar.');
+            const updated = await response.json();
+            // Atualiza apenas este registo na lista local, sem recarregar tudo
+            setPresencas(prev => prev.map(p => p.id === presencaId ? updated : p));
+            setEditingFaltaId(null);
+            setFaltaMessage('✅ Presença atualizada com sucesso!');
+            setTimeout(() => setFaltaMessage(''), 3000);
+        } catch (err: any) {
+            setFaltaMessage('❌ ' + (err.message || 'Erro ao atualizar presença.'));
+        }
+    };
 
     // Helper to get current datetime formatted for the input 'max' attribute
     const getCurrentDateTimeLocal = () => {
@@ -312,14 +335,46 @@ export default function EditarAluno() {
                                 <span>Data</span>
                                 <span>Estado</span>
                                 <span>Justificada</span>
+                                <span></span>
                             </div>
                             {presencas.map((p) => (
-                                <div key={p.id} className={`falta-row ${!p.presente ? 'falta-row-absent' : ''}`}>
+                                <div key={p.id} className={`falta-row ${!p.presente ? 'falta-row-absent' : ''}`} style={{ gridTemplateColumns: '1fr 1fr 1fr auto' }}>
                                     <span>{formatDate(p.data)}</span>
                                     <span className={p.presente ? 'badge-presente' : 'badge-falta'}>
                                         {p.presente ? '✅ Presente' : '❌ Falta'}
                                     </span>
                                     <span>{!p.presente ? (p.justifica ? 'Sim' : 'Não') : '—'}</span>
+
+                                    {/* Botão de edição — só aparece em faltas (não em presenças) */}
+                                    <span>
+                                        {!p.presente && editingFaltaId !== p.id && (
+                                            <button
+                                                className="btn-edit-falta"
+                                                onClick={() => setEditingFaltaId(p.id)}
+                                                title="Editar justificação"
+                                            >
+                                                ✏️
+                                            </button>
+                                        )}
+                                        {!p.presente && editingFaltaId === p.id && (
+                                            <div className="falta-inline-edit">
+                                                <button
+                                                    className="toggle-btn toggle-active"
+                                                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
+                                                    onClick={() => handleJustificar(p.id, !p.justifica)}
+                                                >
+                                                    {p.justifica ? 'Marcar ✗' : 'Justificar ✓'}
+                                                </button>
+                                                <button
+                                                    className="btn-cancel"
+                                                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
+                                                    onClick={() => setEditingFaltaId(null)}
+                                                >
+                                                    Cancelar
+                                                </button>
+                                            </div>
+                                        )}
+                                    </span>
                                 </div>
                             ))}
                         </div>

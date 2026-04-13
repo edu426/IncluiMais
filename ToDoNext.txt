@@ -3,18 +3,18 @@ Alunos
     > Mostrar Alunos na Dashboard - feito
     > Editar e Apagar Alunos - feito
     > Notas sobre o Aluno - feito
-    > Atualizar a Tabela para mostrar Foto dos Alunos
+    > Atualizar a Tabela para mostrar Foto dos Alunos - feito
     > Informações do Encarregado de Educação (Nome, Telefone, Email)
 
 Ferramentas
     > Exportar Excel - feito
     > Guia dos Problema (se for algo simples )
     > Tabela de Presença (Criar Nova tabela na DB com [Data_da_Falta;Id_Aluno;Id;Tipo_Falta;Notas]) - feito
-    > Pesquisa e Filtros (Pesquisar alunos na tabela e filtrar por turma)
+    > Pesquisa e Filtros (Pesquisar alunos na tabela e filtrar por turma) - feito
 
 Dashboard
     > Estatísticas e Resumo (Total de alunos, taxa de presenças, etc.)
 
 Layouts
-    > Melhorar Layouts e Design geral
+    > Melhorar Layouts e Design geral - mais ou menos
     > Logo, Nome e Lema novo

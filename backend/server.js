@@ -16,7 +16,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Increased limit to support base64 images
 
 app.post("/api/sync", async (req, res) => {
   const { clerkId } = req.body;
@@ -44,7 +44,7 @@ app.post("/api/sync", async (req, res) => {
 //-------------Criação de dados-------------
 // POST criar novo aluno
 app.post("/api/alunos", async (req, res) => {
-  const { nome, turma, email, notas, professorId } = req.body;
+  const { nome, turma, email, notas, professorId, foto } = req.body;
 
   if (!nome || !turma || !email || !notas || !professorId) {
     return res.status(400).json({ error: "Todos os campos são obrigatórios." });
@@ -52,7 +52,7 @@ app.post("/api/alunos", async (req, res) => {
 
   try {
     const aluno = await prisma.Alunos.create({
-      data: { nome, turma, email, notas, professorId },
+      data: { nome, turma, email, notas, professorId, foto },
     });
     res.status(201).json(aluno);
   } catch (error) {
@@ -102,7 +102,7 @@ app.get("/api/alunos", async (req, res) => {
 // Chamado pelo EditarAluno.tsx quando o utilizador clica em "Guardar" depois de editar
 app.put("/api/alunos/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, turma, email, notas } = req.body;
+  const { nome, turma, email, notas, foto } = req.body;
 
   // Validar os campos necessários
   if (!nome || !turma || !email) {
@@ -113,7 +113,7 @@ app.put("/api/alunos/:id", async (req, res) => {
     // Atualiza o aluno pelo ID
     const aluno = await prisma.Alunos.update({
       where: { id },
-      data: { nome, turma, email, notas },
+      data: { nome, turma, email, notas, foto },
     });
 
     // Retorna o aluno atualizado para o frontend

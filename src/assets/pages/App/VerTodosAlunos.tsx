@@ -10,6 +10,7 @@ interface Student {
     turma: string;
     notas: string;
     professorId: string;
+    foto?: string;
 }
 
 export default function VerTodosAluno() {
@@ -105,12 +106,23 @@ export default function VerTodosAluno() {
                 </div>
 
                 <div className="alunos-grid">
-                    {filteredStudents.map((student) => (
-                        <div className="aluno-card-mini" key={student.id}>
-                            <div className="info-row">
-                                <span className="info-label">Nome</span>
-                                <span className="info-value">{student.nome}</span>
-                            </div>
+                    {filteredStudents.map((student) => {
+                        const initials = student.nome.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+                        return (
+                            <div className="aluno-card-mini" key={student.id}>
+                                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+                                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#f4d77e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: '#1a1a1a', overflow: 'hidden' }}>
+                                        {student.foto ? (
+                                            <img src={student.foto} alt={`Foto de ${student.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        ) : (
+                                            initials
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="info-row">
+                                    <span className="info-label">Nome</span>
+                                    <span className="info-value">{student.nome}</span>
+                                </div>
 
                             <div className="info-row">
                                 <span className="info-label">Email</span>
@@ -121,11 +133,12 @@ export default function VerTodosAluno() {
                                 <span className="info-label">Turma</span>
                                 <span className="info-value">{student.turma}</span>
                             </div>
-                            <Link to={`/editar-aluno/${student.id}`} className="btn-view">
-                                Editar
-                            </Link>
-                        </div>
-                    ))}
+                                <Link to={`/editar-aluno/${student.id}`} className="btn-view" style={{ textAlign: 'center', display: 'block', marginTop: '1rem' }}>
+                                    Editar
+                                </Link>
+                            </div>
+                        );
+                    })}
 
                     {filteredStudents.length === 0 && (
                         <p className="faltas-empty">Nenhum aluno encontrado.</p>

@@ -20,6 +20,7 @@ model Alunos{
   professorId String
   email     String
   notas     String
+  foto      String?
   presenca  Presenca[]
   professor   Professor @relation(fields: [professorId], references: [id])
 

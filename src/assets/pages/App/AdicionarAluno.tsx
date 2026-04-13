@@ -13,6 +13,7 @@ export default function AdicionarAluno() {
         turma: '',
         email: '',
         notas: '',
+        foto: '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -37,6 +38,17 @@ export default function AdicionarAluno() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setForm(prev => ({ ...prev, foto: reader.result as string }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -64,7 +76,7 @@ export default function AdicionarAluno() {
             }
 
             setSuccess(`✅ Aluno "${data.nome}" adicionado com sucesso!`);
-            setForm({ nome: '', turma: '', email: '', notas: '' });
+            setForm({ nome: '', turma: '', email: '', notas: '', foto: '' });
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -131,6 +143,22 @@ export default function AdicionarAluno() {
                                 onChange={handleChange}
                                 required
                             />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="foto">Fotografia de Perfil (Opcional)</label>
+                            <input
+                                id="foto"
+                                name="foto"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                            />
+                            {form.foto && (
+                                <div style={{ marginTop: '10px' }}>
+                                    <img src={form.foto} alt="Preview" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '50%' }} />
+                                </div>
+                            )}
                         </div>
 
                         <button type="submit" className="btn-submit" disabled={loading}>

@@ -11,6 +11,7 @@ interface Student {
     turma: string;
     notas: string;
     professorId: string;
+    foto?: string;
 }
 
 // Objeto que representa a presença
@@ -37,7 +38,7 @@ export default function EditarAluno() {
     const [isEditing, setIsEditing] = useState(false);
 
     // Guarda os valores iniciais enquanto se edita
-    const [form, setForm] = useState({ nome: '', email: '', turma: '', notas: '' });
+    const [form, setForm] = useState({ nome: '', email: '', turma: '', notas: '', foto: '' });
 
     // Espera q o PUT acabe
     const [saving, setSaving] = useState(false);
@@ -67,7 +68,7 @@ export default function EditarAluno() {
                 setAluno(data);
 
                 // insere os valores iniciais nos campos
-                setForm({ nome: data.nome, email: data.email, turma: data.turma, notas: data.notas });
+                setForm({ nome: data.nome, email: data.email, turma: data.turma, notas: data.notas, foto: data.foto || '' });
             } catch (err: any) {
                 setError(err.message || 'Erro ao carregar dados do aluno.');
             } finally {
@@ -102,6 +103,17 @@ export default function EditarAluno() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setForm(prev => ({ ...prev, foto: reader.result as string }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     // Envia os dados para o PUT /api/alunos/:id
     const handleSave = async () => {
         setSaving(true);
@@ -129,7 +141,7 @@ export default function EditarAluno() {
 
     // Reseta os valores iniciais e sai do modo de edição
     const handleCancel = () => {
-        if (aluno) setForm({ nome: aluno.nome, email: aluno.email, turma: aluno.turma, notas: aluno.notas });
+        if (aluno) setForm({ nome: aluno.nome, email: aluno.email, turma: aluno.turma, notas: aluno.notas, foto: aluno.foto || '' });
         setIsEditing(false);
     };
 
@@ -216,7 +228,22 @@ export default function EditarAluno() {
 
                 {/* ── Student info card ── */}
                 <div className="aluno-card">
-                    <div className="aluno-avatar">{initials}</div>
+                    <div className="aluno-avatar">
+                        {aluno.foto && !isEditing ? (
+                            <img src={aluno.foto} alt={`Foto de ${aluno.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        ) : form.foto && isEditing ? (
+                            <img src={form.foto} alt="Preview da Foto" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        ) : (
+                            initials
+                        )}
+                    </div>
+
+                    {isEditing && (
+                        <div className="info-row">
+                            <span className="info-label">Fotografia</span>
+                            <input type="file" accept="image/*" onChange={handleFileChange} className="edit-input" style={{ border: 'none', padding: '0' }} />
+                        </div>
+                    )}
 
                     <div className="info-row">
                         <span className="info-label">Nome</span>

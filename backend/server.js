@@ -143,6 +143,21 @@ app.get("/api/alunos/detalhe/:id", async (req, res) => {
   }
 });
 
+// GET 5 alunos editados mais recentemente de um professor
+app.get("/api/alunos/recentes/:professorId", async (req, res) => {
+  const { professorId } = req.params;
+  try {
+    const alunos = await prisma.Alunos.findMany({
+      where: { professorId },
+      orderBy: { updatedAt: "desc" },
+      take: 3,
+    });
+    res.json(alunos);
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar alunos recentes." });
+  }
+});
+
 // GET todos os alunos de um professor
 app.get("/api/alunos/:professorId", async (req, res) => {
   const { professorId } = req.params;

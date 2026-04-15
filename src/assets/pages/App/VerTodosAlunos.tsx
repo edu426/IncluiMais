@@ -19,7 +19,7 @@ export default function VerTodosAluno() {
     const [professorId, setProfessorId] = useState<string | null>(null);
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [error, setError] = useState(''); // nao utilizado ate agora
 
     // Search and filter state
     const [searchQuery, setSearchQuery] = useState('');

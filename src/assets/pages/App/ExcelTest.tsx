@@ -41,7 +41,14 @@ export default function ExcelTest() {
     // Exportar todos os alunos para Excel
     const exportToExcel = () => {
         try {
-            const ws = XLSX.utils.json_to_sheet(students);
+            const studentData = students.map(student => ({
+                'ID': student.id,
+                'Nome': student.nome,
+                'Email': student.email,
+                'Turma': student.turma,
+                'Notas': student.notas,
+            }));
+            const ws = XLSX.utils.json_to_sheet(studentData);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Alunos');
             const date = new Date().toISOString().split('T')[0];

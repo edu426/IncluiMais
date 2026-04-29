@@ -11,6 +11,9 @@ Ferramentas
     > Guia dos Problema (se for algo simples )
     > Tabela de Presença (Criar Nova tabela na DB com [Data_da_Falta;Id_Aluno;Id;Tipo_Falta;Notas]) - feito
     > Pesquisa e Filtros (Pesquisar alunos na tabela e filtrar por turma) - feito
+    > Razao da falta justificada + tirar vermelho das faltas justificadas
+    > exportar tabela de faltas
+    > validar email do aluno + alunos n podem ter o msm email
 
 Dashboard
     > Estatísticas e Resumo (Total de alunos, taxa de presenças, etc.)

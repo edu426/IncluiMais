@@ -3,37 +3,46 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url  	    = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model Professor{
-  id        String   @id @default(cuid())
-  clerkId   String   @unique
-  alunos    Alunos[]
+model Professor {
+  id      String   @id @default(cuid())
+  clerkId String   @unique
+  alunos  Alunos[]
 }
 
-model Alunos{
-  id          String   @id @default(cuid())
-  nome        String
-  turma       String
-  professorId String
-  email       String
-  notas       String
-  foto        String?
-  updatedAt   DateTime @updatedAt
-  presenca    Presenca[]
-  professor   Professor @relation(fields: [professorId], references: [id])
+model Alunos {
+  id           String     @id @default(cuid())
+  nome         String
+  turma        String
+  dataNasc     DateTime   @default(now())
+  diretorTurma String     @default("N/A")
+  professorId  String
+  notas        String     @default("")
+  foto         String?
+  updatedAt    DateTime   @updatedAt
+  presenca     Presenca[]
+  professor    Professor  @relation(fields: [professorId], references: [id])
 
+  MSAI MSAI[]
 }
 
-model Presenca{
+model MSAI {
+  id      String @id @default(cuid())
+  alunoId String
+  msai    String @default("000000000000000") @db.Bit(15)
+  aluno   Alunos @relation(fields: [alunoId], references: [id])
+}
+
+model Presenca {
   id        String   @id @default(cuid())
   alunoId   String
   data      DateTime @default(now())
   presente  Boolean
   justifica Boolean
-  aluno     Alunos @relation(fields: [alunoId], references: [id])
+  aluno     Alunos   @relation(fields: [alunoId], references: [id])
 }
 
 //professorId deve ser irrelevante

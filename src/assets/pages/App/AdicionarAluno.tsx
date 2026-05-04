@@ -120,11 +120,11 @@ export default function AdicionarAluno() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="notas">Notas</label>
+                            <label htmlFor="notas">Diagnóstico</label>
                             <textarea
                                 id="notas"
                                 name="notas"
-                                placeholder="Ex: 15, 18, 12..."
+                                placeholder="Ex: TDAH"
                                 value={form.notas}
                                 onChange={handleChange}
                                 required

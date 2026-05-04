@@ -10,7 +10,7 @@ function Home() {
             <section className="hero">
                 <div className="hero-content">
                     <h1>A sua plataforma de<br />Gestão Educativa</h1>
-                    <p>Simplifique o dia a dia da educação especial. Faça a gestão das suas turmas, alunos, notas e assiduidade num único local, de forma simples e intuitiva.</p>
+                    <p>Simplifique o dia a dia da educação especial. Faça a gestão dos seus alunos, diagnósticos e relatórios num único local, de forma simples e intuitiva.</p>
                     {isSignedIn ? (
                         <Link to="/dashboard" className="btn-primary">Entrar na aplicação <i className="ri-arrow-right-line" style={{ verticalAlign: "middle", marginLeft: "8px" }}></i></Link>
                     ) : (
@@ -38,7 +38,7 @@ function Home() {
                         <div className="feature-icon">
                             <i className="ri-file-edit-line"></i>
                         </div>
-                        <h3>Registo de notas e presenças</h3>
+                        <h3>Registo de diagnósticos e presenças</h3>
                         <p>Acompanhe o progresso contínuo. Registe avaliações e assiduidade de forma rápida para cada aluno.</p>
                     </div>
                     <div className="feature-card">

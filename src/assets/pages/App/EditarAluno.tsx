@@ -300,6 +300,9 @@ export default function EditarAluno() {
                         </div>
                     )}
 
+                    {/* ── Layout em Duas Colunas ── */}
+                    <div className="aluno-two-columns">
+                        <div className="aluno-column-left">
                     {/* ── Student info card ── */}
                     <div className="aluno-card">
                         <div className="aluno-avatar">
@@ -336,45 +339,12 @@ export default function EditarAluno() {
                         </div>
 
                         <div className="info-row">
-                            <span className="info-label">Notas</span>
-                            {/* Notas usa um textarea em vez de input para que texto longo possa ser inserido*/}
+                            <span className="info-label">Diagnóstico</span>
+                            {/* usa um textarea em vez de input para que texto longo possa ser inserido*/}
                             {isEditing
                                 ? <textarea className="edit-input edit-textarea" name="notas" value={form.notas} onChange={handleChange} />
                                 : <span className="info-value">{aluno.notas}</span>
                             }
-                        </div>
-                    </div>
-
-                    {/* ── Secção de MSAI ── */}
-                    <div className="msai-section">
-                        <div className="faltas-header">
-                            <h2>Medidas de Suporte à Aprendizagem e à Inclusão</h2>
-                        </div>
-                        <div className="msai-columns">
-                            <div className="msai-column">
-                                <h3>Medidas Universais</h3>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[0] === '1'} onChange={() => handleMsaiChange(0)} disabled={!isEditing} /> Diferenciação pedagógica</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[1] === '1'} onChange={() => handleMsaiChange(1)} disabled={!isEditing} /> Acomodações curriculares</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[2] === '1'} onChange={() => handleMsaiChange(2)} disabled={!isEditing} /> O enriquecimento curricular</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[3] === '1'} onChange={() => handleMsaiChange(3)} disabled={!isEditing} /> A promoção do comportamento pró-social</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[4] === '1'} onChange={() => handleMsaiChange(4)} disabled={!isEditing} /> A intervenção com foco académico ou comportamental em pequenos grupos</label>
-                            </div>
-                            <div className="msai-column">
-                                <h3>Medidas Seletivas</h3>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[5] === '1'} onChange={() => handleMsaiChange(5)} disabled={!isEditing} /> Os percursos curriculares diferenciados</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[6] === '1'} onChange={() => handleMsaiChange(6)} disabled={!isEditing} /> As adaptações curriculares não significativas</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[7] === '1'} onChange={() => handleMsaiChange(7)} disabled={!isEditing} /> Apoio psicopedagógico</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[8] === '1'} onChange={() => handleMsaiChange(8)} disabled={!isEditing} /> A antecipação e o reforço das aprendizagens</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[9] === '1'} onChange={() => handleMsaiChange(9)} disabled={!isEditing} /> O apoio tutorial</label>
-                            </div>
-                            <div className="msai-column">
-                                <h3>Medidas Adicionais</h3>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[10] === '1'} onChange={() => handleMsaiChange(10)} disabled={!isEditing} /> A frequência do ano de escolaridade por disciplinas</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[11] === '1'} onChange={() => handleMsaiChange(11)} disabled={!isEditing} /> As adaptações curriculares significativas</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[12] === '1'} onChange={() => handleMsaiChange(12)} disabled={!isEditing} /> O plano individual de transição</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[13] === '1'} onChange={() => handleMsaiChange(13)} disabled={!isEditing} /> O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[14] === '1'} onChange={() => handleMsaiChange(14)} disabled={!isEditing} /> O desenvolvimento de competências de autonomia pessoal e social</label>
-                            </div>
                         </div>
                     </div>
 
@@ -514,6 +484,43 @@ export default function EditarAluno() {
                                 + Registar Presença
                             </button>
                         )}
+                    </div>
+                        </div>
+                        <div className="aluno-column-right">
+                    {/* ── Secção de MSAI ── */}
+                    <div className="msai-section">
+                        <div className="faltas-header">
+                            <h2>Medidas de Suporte à Aprendizagem e à Inclusão</h2>
+                        </div>
+                        <div className="msai-columns">
+                            <div className="msai-column">
+                                <h3>Medidas Universais</h3>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[0] === '1'} onChange={() => handleMsaiChange(0)} disabled={!isEditing} /> Diferenciação pedagógica</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[1] === '1'} onChange={() => handleMsaiChange(1)} disabled={!isEditing} /> Acomodações curriculares</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[2] === '1'} onChange={() => handleMsaiChange(2)} disabled={!isEditing} /> O enriquecimento curricular</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[3] === '1'} onChange={() => handleMsaiChange(3)} disabled={!isEditing} /> A promoção do comportamento pró-social</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[4] === '1'} onChange={() => handleMsaiChange(4)} disabled={!isEditing} /> A intervenção com foco académico ou comportamental em pequenos grupos</label>
+                            </div>
+                            <div className="msai-column">
+                                <h3>Medidas Seletivas</h3>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[5] === '1'} onChange={() => handleMsaiChange(5)} disabled={!isEditing} /> Os percursos curriculares diferenciados</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[6] === '1'} onChange={() => handleMsaiChange(6)} disabled={!isEditing} /> As adaptações curriculares não significativas</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[7] === '1'} onChange={() => handleMsaiChange(7)} disabled={!isEditing} /> Apoio psicopedagógico</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[8] === '1'} onChange={() => handleMsaiChange(8)} disabled={!isEditing} /> A antecipação e o reforço das aprendizagens</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[9] === '1'} onChange={() => handleMsaiChange(9)} disabled={!isEditing} /> O apoio tutorial</label>
+                            </div>
+                            <div className="msai-column">
+                                <h3>Medidas Adicionais</h3>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[10] === '1'} onChange={() => handleMsaiChange(10)} disabled={!isEditing} /> A frequência do ano de escolaridade por disciplinas</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[11] === '1'} onChange={() => handleMsaiChange(11)} disabled={!isEditing} /> As adaptações curriculares significativas</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[12] === '1'} onChange={() => handleMsaiChange(12)} disabled={!isEditing} /> O plano individual de transição</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[13] === '1'} onChange={() => handleMsaiChange(13)} disabled={!isEditing} /> O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
+                                <label className="msai-checkbox"><input type="checkbox" checked={msai[14] === '1'} onChange={() => handleMsaiChange(14)} disabled={!isEditing} /> O desenvolvimento de competências de autonomia pessoal e social</label>
+                            </div>
+                        </div>
+                    </div>
+
+                        </div>
                     </div>
                 </div>) : (
                 <div className="ver-aluno-page">

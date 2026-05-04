@@ -188,7 +188,7 @@ export default function ExcelTest() {
                                 <th>ID</th>
                                 <th>Nome</th>
                                 <th>Turma</th>
-                                <th>Notas</th>
+                                <th>Diagnóstico</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>

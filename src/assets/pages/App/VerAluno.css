@@ -1,9 +1,33 @@
 /* Page wrapper */
 .ver-aluno-page {
     padding: 3rem 5%;
-    max-width: 700px;
+    max-width: 1400px;
     margin: 0 auto;
     font-family: 'Inter', sans-serif;
+}
+
+/* ── Layout Duas Colunas (EditarAluno) ── */
+.aluno-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.aluno-column-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.aluno-column-right {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 1024px) {
+    .aluno-two-columns {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Wider wrapper for grid pages */
@@ -564,7 +588,6 @@
     border-radius: 20px;
     padding: 2.5rem 2rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    margin-top: 2rem;
 }
 
 .msai-columns {

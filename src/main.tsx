@@ -10,6 +10,7 @@ import AdicionarAluno from "./assets/pages/App/AdicionarAluno.tsx"
 import EditarAluno from "./assets/pages/App/EditarAluno.tsx"
 import { ClerkProvider } from "@clerk/clerk-react"
 import VerTodosAlunos from "./assets/pages/App/VerTodosAlunos.tsx"
+import ExportarAluno from "./assets/pages/App/ExportarAluno.tsx"
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/adicionar-aluno" element={<AdicionarAluno />} />
             <Route path="/editar-aluno/:id" element={<EditarAluno />} />
             <Route path="/ver-todos-alunos" element={<VerTodosAlunos />} />
+            <Route path="/exportar-aluno/:id" element={<ExportarAluno />} />
           </Route>
         </Routes>
       </BrowserRouter>

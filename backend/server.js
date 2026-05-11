@@ -62,10 +62,15 @@ app.post("/api/alunos", async (req, res) => {
 
 // POST registar nova presença
 app.post("/api/presenca", async (req, res) => {
-  const { alunoId, presente, justifica, data } = req.body;
+  const { alunoId, presente, justifica, justificacao, data } = req.body;
 
   if (!alunoId || presente == null || justifica == null) {
     return res.status(400).json({ error: "Todos os campos são obrigatórios." });
+  }
+
+  // Exige justificação textual quando a falta é marcada como justificada
+  if (!presente && justifica && (!justificacao || !justificacao.trim())) {
+    return res.status(400).json({ error: "A justificação é obrigatória quando a falta é justificada." });
   }
 
   try {
@@ -74,6 +79,7 @@ app.post("/api/presenca", async (req, res) => {
         alunoId,
         presente,
         justifica,
+        justificacao: justifica && justificacao ? justificacao.trim() : null,
         ...(data ? { data: new Date(data) } : {}),
       },
     });
@@ -205,16 +211,24 @@ app.get("/api/presenca/:alunoId", async (req, res) => {
 // PUT atualizar uma presença (ex: marcar como justificada)
 app.put("/api/presenca/:id", async (req, res) => {
   const { id } = req.params;
-  const { justifica } = req.body;
+  const { justifica, justificacao } = req.body;
 
   if (justifica == null) {
     return res.status(400).json({ error: "Campo 'justifica' é obrigatório." });
   }
 
+  // Exige justificação textual quando se marca como justificada
+  if (justifica && (!justificacao || !justificacao.trim())) {
+    return res.status(400).json({ error: "A justificação é obrigatória quando a falta é justificada." });
+  }
+
   try {
     const registo = await prisma.Presenca.update({
       where: { id },
-      data: { justifica },
+      data: {
+        justifica,
+        justificacao: justifica && justificacao ? justificacao.trim() : null,
+      },
     });
     res.json(registo);
   } catch (error) {

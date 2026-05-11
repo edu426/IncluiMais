@@ -42,7 +42,8 @@ model Presenca {
   data      DateTime @default(now())
   presente  Boolean
   justifica Boolean
+  justificacao String? 
   aluno     Alunos   @relation(fields: [alunoId], references: [id])
 }
 
-//professorId deve ser irrelevante
+//professorId deve ser irrelevante (substituido pela string diretorTurma)

@@ -15,10 +15,10 @@ Ferramentas
 
 
 Exportar
-    > Nao mostrar todos os alunos da Db so os de cada professor
-    > Partilha de INformações sobre um unico aluno
-    > exportar tabela de faltas
-    > Exportar informação especifica sobre um aluno
+    > Nao mostrar todos os alunos da Db so os de cada professor - feito
+    > Partilha de INformações sobre um unico aluno - feito
+    > exportar tabela de faltas - feito
+    > Exportar informação especifica sobre um aluno - feito
 
 Dashboard
     > Estatísticas e Resumo (Total de alunos, taxa de presenças, etc.)
@@ -26,11 +26,11 @@ Dashboard
 Editar Alunos
     > Tirar email do aluno - so na Db
     > Data de nascimento e idade do aluno + mandar email no aniversário - so na Db
-    > Razao da falta justificada + tirar vermelho das faltas justificadas
+    > Razao da falta justificada + tirar vermelho das faltas justificadas - feito
     > Nome do diretor de turma - so na Db
-    > Medidas de Suporte à Aprendizagem e à Inclusão(MSAI) - ver documento(tabela)
+    > Medidas de Suporte à Aprendizagem e à Inclusão(MSAI) - ver documento(tabela) - feito
     > Adicionar tabela "Terapias"
-    > Mudar nome de "Notas" para "Diagnostico"(so no front-end , na Db vai continuar "notas")
+    > Mudar nome de "Notas" para "Diagnostico"(so no front-end , na Db vai continuar "notas") - feito
     >Estrategias de ensino orientadas ao perfil do aluno (professor preenche mais uma caixa de texto basica)
 
 Layouts

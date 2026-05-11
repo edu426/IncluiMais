@@ -10,6 +10,7 @@ interface Student {
     turma: string;
     notas: string;
     professorId: string;
+    diretorTurma: string;
 }
 
 export default function ExcelTest() {
@@ -56,7 +57,8 @@ export default function ExcelTest() {
                 'ID': student.id,
                 'Nome': student.nome,
                 'Turma': student.turma,
-                'Notas': student.notas,
+                'Diagnóstico': student.notas,
+                'Diretor de turma': student.diretorTurma
             }));
             const ws = XLSX.utils.json_to_sheet(studentData);
             const wb = XLSX.utils.book_new();
@@ -189,7 +191,7 @@ export default function ExcelTest() {
                                 <th>Nome</th>
                                 <th>Turma</th>
                                 <th>Diagnóstico</th>
-                                <th>Ações</th>
+                                <th>Diretor de turma</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -199,6 +201,7 @@ export default function ExcelTest() {
                                     <td>{student.nome}</td>
                                     <td>{student.turma}</td>
                                     <td>{student.notas}</td>
+                                    <td>{student.diretorTurma}</td>
                                     <td>
                                         <Link to={`/editar-aluno/${student.id}`} className="btn btn-view">
                                             Editar

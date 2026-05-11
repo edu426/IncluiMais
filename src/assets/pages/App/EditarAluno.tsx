@@ -330,263 +330,263 @@ export default function EditarAluno() {
                     {/* ── Layout em Duas Colunas ── */}
                     <div className="aluno-two-columns">
                         <div className="aluno-column-left">
-                    {/* ── Student info card ── */}
-                    <div className="aluno-card">
-                        <div className="aluno-avatar">
-                            {aluno.foto && !isEditing ? (
-                                <img src={aluno.foto} alt={`Foto de ${aluno.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                            ) : form.foto && isEditing ? (
-                                <img src={form.foto} alt="Preview da Foto" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                            ) : (
-                                initials
-                            )}
-                        </div>
-
-                        {isEditing && (
-                            <div className="info-row">
-                                <span className="info-label">Fotografia</span>
-                                <input type="file" accept="image/*" onChange={handleFileChange} className="edit-input" style={{ border: 'none', padding: '0' }} />
-                            </div>
-                        )}
-
-                        <div className="info-row">
-                            <span className="info-label">Nome</span>
-                            {isEditing
-                                ? <input className="edit-input" name="nome" value={form.nome} onChange={handleChange} />
-                                : <span className="info-value">{aluno.nome}</span>
-                            }
-                        </div>
-
-                        <div className="info-row">
-                            <span className="info-label">Turma</span>
-                            {isEditing
-                                ? <input className="edit-input" name="turma" value={form.turma} onChange={handleChange} />
-                                : <span className="info-value">{aluno.turma}</span>
-                            }
-                        </div>
-
-                        <div className="info-row">
-                            <span className="info-label">Diagnóstico</span>
-                            {/* usa um textarea em vez de input para que texto longo possa ser inserido*/}
-                            {isEditing
-                                ? <textarea className="edit-input edit-textarea" name="notas" value={form.notas} onChange={handleChange} />
-                                : <span className="info-value">{aluno.notas}</span>
-                            }
-                        </div>
-                    </div>
-
-                    {/* ── Secção de Presenças ── */}
-                    <div className="faltas-section">
-                        <div className="faltas-header">
-                            <div>
-                                <h2>Presenças</h2>
-                                {!loadingFaltas && (
-                                    <p className="faltas-summary">
-                                        {totalFaltas === 0
-                                            ? 'Sem faltas registadas.'
-                                            : `${totalFaltas} falta${totalFaltas > 1 ? 's' : ''} registada${totalFaltas > 1 ? 's' : ''}`}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Mensagem de feedback após adicionar uma presença */}
-                        {faltaMessage && (
-                            <div className={faltaMessage.startsWith('✅') ? 'feedback-success' : 'feedback-error'}>
-                                {faltaMessage}
-                            </div>
-                        )}
-
-                        {/* Lista de presenças */}
-                        {loadingFaltas ? (
-                            <p className="faltas-loading">A carregar faltas...</p>
-                        ) : presencas.length === 0 ? (
-                            <p className="faltas-empty">Nenhum registo encontrado.</p>
-                        ) : (
-                            <div className="faltas-list">
-                                <div className="falta-row falta-row-header">
-                                    <span>Data</span>
-                                    <span>Estado</span>
-                                    <span>Justificada</span>
-                                    <span></span>
+                            {/* ── Student info card ── */}
+                            <div className="aluno-card">
+                                <div className="aluno-avatar">
+                                    {aluno.foto && !isEditing ? (
+                                        <img src={aluno.foto} alt={`Foto de ${aluno.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                    ) : form.foto && isEditing ? (
+                                        <img src={form.foto} alt="Preview da Foto" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                    ) : (
+                                        initials
+                                    )}
                                 </div>
-                                {presencas.map((p) => (
-                                    <div key={p.id} className={`falta-row ${!p.presente && !p.justifica ? 'falta-row-absent' : ''}`} style={{ gridTemplateColumns: '1fr 1fr 1fr auto' }}>
-                                        <span>{formatDate(p.data)}</span>
-                                        <span className={p.presente ? 'badge-presente' : 'badge-falta'}>
-                                            {p.presente ? '✅ Presente' : '❌ Falta'}
-                                        </span>
-                                        <span>
-                                            {!p.presente ? (
-                                                p.justifica ? (
-                                                    <span title={p.justificacao || ''}>
-                                                        Sim {p.justificacao && <em style={{ fontSize: '0.8em', color: 'var(--text-muted, #aaa)' }}>— {p.justificacao.length > 30 ? p.justificacao.slice(0, 30) + '...' : p.justificacao}</em>}
-                                                    </span>
-                                                ) : 'Não'
-                                            ) : '—'}
-                                        </span>
 
-                                        {/* Botão de edição — só aparece em faltas (não em presenças) */}
-                                        <span>
-                                            {!p.presente && editingFaltaId !== p.id && (
-                                                <button
-                                                    className="btn-edit-falta"
-                                                    onClick={() => { setEditingFaltaId(p.id); setEditingJustificacao(p.justificacao || ''); }}
-                                                    title="Editar justificação"
-                                                >
-                                                    ✏️
-                                                </button>
-                                            )}
-                                            {!p.presente && editingFaltaId === p.id && (
-                                                <div className="falta-inline-edit" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.4rem' }}>
-                                                    <textarea
-                                                        className="edit-input"
-                                                        placeholder="Motivo da justificação *"
-                                                        value={editingJustificacao}
-                                                        onChange={e => setEditingJustificacao(e.target.value)}
-                                                        rows={2}
-                                                        style={{ fontSize: '0.8rem', width: '100%', minWidth: '200px', resize: 'vertical' }}
-                                                    />
-                                                    <div style={{ display: 'flex', gap: '0.4rem' }}>
-                                                        <button
-                                                            className="toggle-btn toggle-active"
-                                                            style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
-                                                            onClick={() => handleJustificar(p.id, true)}
-                                                        >
-                                                            Justificar ✓
-                                                        </button>
-                                                        {p.justifica && (
-                                                            <button
-                                                                className="btn-cancel"
-                                                                style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
-                                                                onClick={() => handleJustificar(p.id, false)}
-                                                            >
-                                                                Remover
-                                                            </button>
-                                                        )}
-                                                        <button
-                                                            className="btn-cancel"
-                                                            style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
-                                                            onClick={() => { setEditingFaltaId(null); setEditingJustificacao(''); }}
-                                                        >
-                                                            Cancelar
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </span>
+                                {isEditing && (
+                                    <div className="info-row">
+                                        <span className="info-label">Fotografia</span>
+                                        <input type="file" accept="image/*" onChange={handleFileChange} className="edit-input" style={{ border: 'none', padding: '0' }} />
                                     </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Formulário para registar uma nova presença */}
-                        {showFaltaForm && (
-                            <div className="falta-form">
-                                <p className="falta-form-title">Registar nova presença</p>
-
-                                {/* Date and time picker */}
-                                <div className="form-group">
-                                    <label className="info-label">Data e Hora (opcional)</label>
-                                    <input
-                                        type="datetime-local"
-                                        className="edit-input"
-                                        value={novaFalta.data}
-                                        max={getCurrentDateTimeLocal()}
-                                        onChange={e => setNovaFalta({ ...novaFalta, data: e.target.value })}
-                                    />
-                                </div>
-
-                                <div className="falta-toggle">
-                                    <button
-                                        className={`toggle-btn ${novaFalta.presente ? 'toggle-active' : ''}`}
-                                        onClick={() => setNovaFalta({ ...novaFalta, presente: true, justifica: false, justificacao: '' })}
-                                    >
-                                        ✅ Presente
-                                    </button>
-                                    <button
-                                        className={`toggle-btn ${!novaFalta.presente ? 'toggle-active' : ''}`}
-                                        onClick={() => setNovaFalta({ ...novaFalta, presente: false })}
-                                    >
-                                        ❌ Falta
-                                    </button>
-                                </div>
-
-                                {/* Checkbox "Justificada" + campo de justificação */}
-                                {!novaFalta.presente && (
-                                    <>
-                                        <label className="falta-check-label">
-                                            <input
-                                                type="checkbox"
-                                                checked={novaFalta.justifica}
-                                                onChange={e => setNovaFalta({ ...novaFalta, justifica: e.target.checked, justificacao: '' })}
-                                            />
-                                            Falta justificada
-                                        </label>
-                                        {novaFalta.justifica && (
-                                            <div className="form-group">
-                                                <label className="info-label">Motivo da justificação <span style={{ color: '#e55' }}>*</span></label>
-                                                <textarea
-                                                    className="edit-input edit-textarea"
-                                                    placeholder="Descreva o motivo da falta..."
-                                                    value={novaFalta.justificacao}
-                                                    onChange={e => setNovaFalta({ ...novaFalta, justificacao: e.target.value })}
-                                                    rows={3}
-                                                />
-                                            </div>
-                                        )}
-                                    </>
                                 )}
 
-                                <div className="falta-form-actions">
-                                    <button className="btn-save" onClick={handleAddFalta} disabled={addingFalta}>
-                                        {addingFalta ? 'A registar...' : 'Confirmar'}
-                                    </button>
-                                    <button className="btn-cancel" onClick={() => setShowFaltaForm(false)}>Cancelar</button>
+                                <div className="info-row">
+                                    <span className="info-label">Nome</span>
+                                    {isEditing
+                                        ? <input className="edit-input" name="nome" value={form.nome} onChange={handleChange} />
+                                        : <span className="info-value">{aluno.nome}</span>
+                                    }
+                                </div>
+
+                                <div className="info-row">
+                                    <span className="info-label">Turma</span>
+                                    {isEditing
+                                        ? <input className="edit-input" name="turma" value={form.turma} onChange={handleChange} />
+                                        : <span className="info-value">{aluno.turma}</span>
+                                    }
+                                </div>
+
+                                <div className="info-row">
+                                    <span className="info-label">Diagnóstico</span>
+                                    {/* usa um textarea em vez de input para que texto longo possa ser inserido*/}
+                                    {isEditing
+                                        ? <textarea className="edit-input edit-textarea" name="notas" value={form.notas} onChange={handleChange} />
+                                        : <span className="info-value">{aluno.notas}</span>
+                                    }
                                 </div>
                             </div>
-                        )}
 
-                        {!showFaltaForm && (
-                            <button className="btn-add-falta" onClick={() => setShowFaltaForm(true)}>
-                                + Registar Presença
-                            </button>
-                        )}
-                    </div>
+                            {/* ── Secção de Presenças ── */}
+                            <div className="faltas-section">
+                                <div className="faltas-header">
+                                    <div>
+                                        <h2>Presenças</h2>
+                                        {!loadingFaltas && (
+                                            <p className="faltas-summary">
+                                                {totalFaltas === 0
+                                                    ? 'Sem faltas registadas.'
+                                                    : `${totalFaltas} falta${totalFaltas > 1 ? 's' : ''} registada${totalFaltas > 1 ? 's' : ''}`}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Mensagem de feedback após adicionar uma presença */}
+                                {faltaMessage && (
+                                    <div className={faltaMessage.startsWith('✅') ? 'feedback-success' : 'feedback-error'}>
+                                        {faltaMessage}
+                                    </div>
+                                )}
+
+                                {/* Lista de presenças */}
+                                {loadingFaltas ? (
+                                    <p className="faltas-loading">A carregar faltas...</p>
+                                ) : presencas.length === 0 ? (
+                                    <p className="faltas-empty">Nenhum registo encontrado.</p>
+                                ) : (
+                                    <div className="faltas-list">
+                                        <div className="falta-row falta-row-header">
+                                            <span>Data</span>
+                                            <span>Estado</span>
+                                            <span>Justificada</span>
+                                            <span></span>
+                                        </div>
+                                        {presencas.map((p) => (
+                                            <div key={p.id} className={`falta-row ${!p.presente && !p.justifica ? 'falta-row-absent' : ''}`} style={{ gridTemplateColumns: '1fr 1fr 1fr auto' }}>
+                                                <span>{formatDate(p.data)}</span>
+                                                <span className={p.presente ? 'badge-presente' : 'badge-falta'}>
+                                                    {p.presente ? '✅ Presente' : '❌ Falta'}
+                                                </span>
+                                                <span>
+                                                    {!p.presente ? (
+                                                        p.justifica ? (
+                                                            <span title={p.justificacao || ''}>
+                                                                Sim {p.justificacao && <em style={{ fontSize: '0.8em', color: 'var(--text-muted, #aaa)' }}>— {p.justificacao.length > 30 ? p.justificacao.slice(0, 30) + '...' : p.justificacao}</em>}
+                                                            </span>
+                                                        ) : 'Não'
+                                                    ) : '—'}
+                                                </span>
+
+                                                {/* Botão de edição — só aparece em faltas (não em presenças) */}
+                                                <span>
+                                                    {!p.presente && editingFaltaId !== p.id && (
+                                                        <button
+                                                            className="btn-edit-falta"
+                                                            onClick={() => { setEditingFaltaId(p.id); setEditingJustificacao(p.justificacao || ''); }}
+                                                            title="Editar justificação"
+                                                        >
+                                                            ✏️
+                                                        </button>
+                                                    )}
+                                                    {!p.presente && editingFaltaId === p.id && (
+                                                        <div className="falta-inline-edit" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.4rem' }}>
+                                                            <textarea
+                                                                className="edit-input"
+                                                                placeholder="Motivo da justificação *"
+                                                                value={editingJustificacao}
+                                                                onChange={e => setEditingJustificacao(e.target.value)}
+                                                                rows={2}
+                                                                style={{ fontSize: '0.8rem', width: '100%', minWidth: '200px', resize: 'vertical' }}
+                                                            />
+                                                            <div style={{ display: 'flex', gap: '0.4rem' }}>
+                                                                <button
+                                                                    className="toggle-btn toggle-active"
+                                                                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
+                                                                    onClick={() => handleJustificar(p.id, true)}
+                                                                >
+                                                                    Justificar ✓
+                                                                </button>
+                                                                {p.justifica && (
+                                                                    <button
+                                                                        className="btn-cancel"
+                                                                        style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
+                                                                        onClick={() => handleJustificar(p.id, false)}
+                                                                    >
+                                                                        Remover
+                                                                    </button>
+                                                                )}
+                                                                <button
+                                                                    className="btn-cancel"
+                                                                    style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem' }}
+                                                                    onClick={() => { setEditingFaltaId(null); setEditingJustificacao(''); }}
+                                                                >
+                                                                    Cancelar
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Formulário para registar uma nova presença */}
+                                {showFaltaForm && (
+                                    <div className="falta-form">
+                                        <p className="falta-form-title">Registar nova presença</p>
+
+                                        {/* Date and time picker */}
+                                        <div className="form-group">
+                                            <label className="info-label">Data e Hora (opcional)</label>
+                                            <input
+                                                type="datetime-local"
+                                                className="edit-input"
+                                                value={novaFalta.data}
+                                                max={getCurrentDateTimeLocal()}
+                                                onChange={e => setNovaFalta({ ...novaFalta, data: e.target.value })}
+                                            />
+                                        </div>
+
+                                        <div className="falta-toggle">
+                                            <button
+                                                className={`toggle-btn ${novaFalta.presente ? 'toggle-active' : ''}`}
+                                                onClick={() => setNovaFalta({ ...novaFalta, presente: true, justifica: false, justificacao: '' })}
+                                            >
+                                                ✅ Presente
+                                            </button>
+                                            <button
+                                                className={`toggle-btn ${!novaFalta.presente ? 'toggle-active' : ''}`}
+                                                onClick={() => setNovaFalta({ ...novaFalta, presente: false })}
+                                            >
+                                                ❌ Falta
+                                            </button>
+                                        </div>
+
+                                        {/* Checkbox "Justificada" + campo de justificação */}
+                                        {!novaFalta.presente && (
+                                            <>
+                                                <label className="falta-check-label">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={novaFalta.justifica}
+                                                        onChange={e => setNovaFalta({ ...novaFalta, justifica: e.target.checked, justificacao: '' })}
+                                                    />
+                                                    Falta justificada
+                                                </label>
+                                                {novaFalta.justifica && (
+                                                    <div className="form-group">
+                                                        <label className="info-label">Motivo da justificação <span style={{ color: '#e55' }}>*</span></label>
+                                                        <textarea
+                                                            className="edit-input edit-textarea"
+                                                            placeholder="Descreva o motivo da falta..."
+                                                            value={novaFalta.justificacao}
+                                                            onChange={e => setNovaFalta({ ...novaFalta, justificacao: e.target.value })}
+                                                            rows={3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </>
+                                        )}
+
+                                        <div className="falta-form-actions">
+                                            <button className="btn-save" onClick={handleAddFalta} disabled={addingFalta}>
+                                                {addingFalta ? 'A registar...' : 'Confirmar'}
+                                            </button>
+                                            <button className="btn-cancel" onClick={() => setShowFaltaForm(false)}>Cancelar</button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {!showFaltaForm && (
+                                    <button className="btn-add-falta" onClick={() => setShowFaltaForm(true)}>
+                                        + Registar Presença
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div className="aluno-column-right">
-                    {/* ── Secção de MSAI ── */}
-                    <div className="msai-section">
-                        <div className="faltas-header">
-                            <h2>Medidas de Suporte à Aprendizagem e à Inclusão</h2>
-                        </div>
-                        <div className="msai-columns">
-                            <div className="msai-column">
-                                <h3>Medidas Universais</h3>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[0] === '1'} onChange={() => handleMsaiChange(0)} disabled={!isEditing} /> Diferenciação pedagógica</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[1] === '1'} onChange={() => handleMsaiChange(1)} disabled={!isEditing} /> Acomodações curriculares</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[2] === '1'} onChange={() => handleMsaiChange(2)} disabled={!isEditing} /> O enriquecimento curricular</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[3] === '1'} onChange={() => handleMsaiChange(3)} disabled={!isEditing} /> A promoção do comportamento pró-social</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[4] === '1'} onChange={() => handleMsaiChange(4)} disabled={!isEditing} /> A intervenção com foco académico ou comportamental em pequenos grupos</label>
+                            {/* ── Secção de MSAI ── */}
+                            <div className="msai-section">
+                                <div className="faltas-header">
+                                    <h2>Medidas de Suporte à Aprendizagem e à Inclusão</h2>
+                                </div>
+                                <div className="msai-columns">
+                                    <div className="msai-column">
+                                        <h3>Medidas Universais</h3>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[0] === '1'} onChange={() => handleMsaiChange(0)} disabled={!isEditing} /> Diferenciação pedagógica</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[1] === '1'} onChange={() => handleMsaiChange(1)} disabled={!isEditing} /> Acomodações curriculares</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[2] === '1'} onChange={() => handleMsaiChange(2)} disabled={!isEditing} /> O enriquecimento curricular</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[3] === '1'} onChange={() => handleMsaiChange(3)} disabled={!isEditing} /> A promoção do comportamento pró-social</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[4] === '1'} onChange={() => handleMsaiChange(4)} disabled={!isEditing} /> A intervenção com foco académico ou comportamental em pequenos grupos</label>
+                                    </div>
+                                    <div className="msai-column">
+                                        <h3>Medidas Seletivas</h3>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[5] === '1'} onChange={() => handleMsaiChange(5)} disabled={!isEditing} /> Os percursos curriculares diferenciados</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[6] === '1'} onChange={() => handleMsaiChange(6)} disabled={!isEditing} /> As adaptações curriculares não significativas</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[7] === '1'} onChange={() => handleMsaiChange(7)} disabled={!isEditing} /> Apoio psicopedagógico</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[8] === '1'} onChange={() => handleMsaiChange(8)} disabled={!isEditing} /> A antecipação e o reforço das aprendizagens</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[9] === '1'} onChange={() => handleMsaiChange(9)} disabled={!isEditing} /> O apoio tutorial</label>
+                                    </div>
+                                    <div className="msai-column">
+                                        <h3>Medidas Adicionais</h3>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[10] === '1'} onChange={() => handleMsaiChange(10)} disabled={!isEditing} /> A frequência do ano de escolaridade por disciplinas</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[11] === '1'} onChange={() => handleMsaiChange(11)} disabled={!isEditing} /> As adaptações curriculares significativas</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[12] === '1'} onChange={() => handleMsaiChange(12)} disabled={!isEditing} /> O plano individual de transição</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[13] === '1'} onChange={() => handleMsaiChange(13)} disabled={!isEditing} /> O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
+                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[14] === '1'} onChange={() => handleMsaiChange(14)} disabled={!isEditing} /> O desenvolvimento de competências de autonomia pessoal e social</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="msai-column">
-                                <h3>Medidas Seletivas</h3>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[5] === '1'} onChange={() => handleMsaiChange(5)} disabled={!isEditing} /> Os percursos curriculares diferenciados</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[6] === '1'} onChange={() => handleMsaiChange(6)} disabled={!isEditing} /> As adaptações curriculares não significativas</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[7] === '1'} onChange={() => handleMsaiChange(7)} disabled={!isEditing} /> Apoio psicopedagógico</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[8] === '1'} onChange={() => handleMsaiChange(8)} disabled={!isEditing} /> A antecipação e o reforço das aprendizagens</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[9] === '1'} onChange={() => handleMsaiChange(9)} disabled={!isEditing} /> O apoio tutorial</label>
-                            </div>
-                            <div className="msai-column">
-                                <h3>Medidas Adicionais</h3>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[10] === '1'} onChange={() => handleMsaiChange(10)} disabled={!isEditing} /> A frequência do ano de escolaridade por disciplinas</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[11] === '1'} onChange={() => handleMsaiChange(11)} disabled={!isEditing} /> As adaptações curriculares significativas</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[12] === '1'} onChange={() => handleMsaiChange(12)} disabled={!isEditing} /> O plano individual de transição</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[13] === '1'} onChange={() => handleMsaiChange(13)} disabled={!isEditing} /> O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
-                                <label className="msai-checkbox"><input type="checkbox" checked={msai[14] === '1'} onChange={() => handleMsaiChange(14)} disabled={!isEditing} /> O desenvolvimento de competências de autonomia pessoal e social</label>
-                            </div>
-                        </div>
-                    </div>
 
                         </div>
                     </div>

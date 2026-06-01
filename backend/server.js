@@ -354,6 +354,57 @@ app.put("/api/msai/:alunoId", async (req, res) => {
   }
 });
 
+// GET dashboard stats
+app.get("/api/dashboard/:professorId", async (req, res) => {
+  const { professorId } = req.params;
+  try {
+    const totalAlunos = await prisma.Alunos.count({
+      where: { professorId },
+    });
+
+    const atividadesPendentes = await prisma.Atividades.count({
+      where: {
+        concluida: false,
+        presenca: { aluno: { professorId } }
+      }
+    });
+
+    const faltasPorJustificar = await prisma.Presenca.count({
+      where: {
+        presente: false,
+        justifica: false,
+        aluno: { professorId }
+      }
+    });
+
+    const allMsai = await prisma.MSAI.findMany({
+      where: { aluno: { professorId } }
+    });
+
+    let universais = 0;
+    let seletivas = 0;
+    let adicionais = 0;
+
+    allMsai.forEach(record => {
+      const msaiStr = record.msai;
+      if (msaiStr.length === 15) {
+        universais += msaiStr.substring(0, 5).split('').filter(c => c === '1').length;
+        seletivas += msaiStr.substring(5, 10).split('').filter(c => c === '1').length;
+        adicionais += msaiStr.substring(10, 15).split('').filter(c => c === '1').length;
+      }
+    });
+
+    res.json({
+      totalAlunos,
+      atividadesPendentes,
+      faltasPorJustificar,
+      msai: { universais, seletivas, adicionais }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Erro ao carregar dashboard." });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {

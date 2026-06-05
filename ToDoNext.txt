@@ -22,6 +22,7 @@ Exportar
 
 Dashboard
     > Estatísticas e Resumo (Total de alunos, taxa de presenças, etc.)
+    > Instalar Recharts
 
 Editar Alunos
     > Tirar email do aluno - feito

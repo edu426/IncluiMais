@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import IsLoggedIn from '../../functions/IsLoggedIn';
 import './VerAluno.css';
 import { useUser } from '@clerk/clerk-react';
@@ -15,6 +15,7 @@ interface Student {
 
 export default function VerTodosAluno() {
     const { user } = useUser();
+    const navigate = useNavigate();
     const [professorId, setProfessorId] = useState<string | null>(null);
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true);
@@ -80,7 +81,10 @@ export default function VerTodosAluno() {
     return (
         <IsLoggedIn>
             <div className="ver-todos-page">
-                <Link to="/dashboard" className="back-link">← Voltar ao Dashboard</Link>
+                <button onClick={() => navigate(-1)} className="back-link">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
+                    Voltar
+                </button>
 
                 <div className="ver-aluno-header">
                     <div>

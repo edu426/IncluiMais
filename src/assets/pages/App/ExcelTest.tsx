@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './ExcelTest.css';
 import IsLoggedIn from '../../functions/IsLoggedIn';
 import { useUser } from '@clerk/clerk-react';
+
 interface Student {
     id: string;
     nome: string;
@@ -15,11 +16,12 @@ interface Student {
 
 export default function ExcelTest() {
     const { user } = useUser();
+    const navigate = useNavigate();
     const [students, setStudents] = useState<Student[]>([]);
     const [professorId, setProfessorId] = useState('');
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState<'success' | 'error'>('success');
 
     useEffect(() => {
         if (user) {
@@ -30,7 +32,6 @@ export default function ExcelTest() {
             })
                 .then((res) => res.json())
                 .then((data) => {
-                    console.log("Sincronizado com sucesso:", data);
                     setProfessorId(data.id);
                 })
                 .catch((err) => {
@@ -39,10 +40,8 @@ export default function ExcelTest() {
         }
     }, [user]);
 
-    // Fetch alunos do backend
     useEffect(() => {
         if (!professorId) return;
-        console.log(professorId);
         setLoading(true);
         fetch(`/api/alunos/${professorId}`)
             .then((res) => res.json())
@@ -50,15 +49,19 @@ export default function ExcelTest() {
             .catch((err) => console.error("Erro ao buscar alunos:", err))
             .finally(() => setLoading(false));
     }, [professorId]);
+
     // Exportar todos os alunos para Excel
     const exportToExcel = () => {
+        if (students.length === 0) {
+            showMessage('Não existem alunos para exportar.', 'error');
+            return;
+        }
         try {
             const studentData = students.map(student => ({
-                'ID': student.id,
                 'Nome': student.nome,
                 'Turma': student.turma,
                 'Diagnóstico': student.notas,
-                'Diretor de turma': student.diretorTurma
+                'Diretor de Turma': student.diretorTurma
             }));
             const ws = XLSX.utils.json_to_sheet(studentData);
             const wb = XLSX.utils.book_new();
@@ -66,171 +69,157 @@ export default function ExcelTest() {
             const date = new Date().toISOString().split('T')[0];
             const filename = `Alunos_${date}.xlsx`;
             XLSX.writeFile(wb, filename);
-            setMessage(`Ficheiro Excel "${filename}" descarregado com sucesso!`);
-            setTimeout(() => setMessage(''), 3000);
+            showMessage(`Ficheiro "${filename}" descarregado com sucesso!`, 'success');
         } catch (error: any) {
-            setMessage(`Error: ${error.message}`);
+            showMessage(`Erro ao exportar: ${error.message}`, 'error');
         }
     };
 
-    // Exportar com colunas personalizadas (ainda não implementado/exemplo)
-    /*
-    const exportCustomColumns = () => { 
-        try {
-            const customData = students.map(student => ({
-                'ID': student.id,
-                'Nome': student.nome,
-                'Email': student.email,
-                'Turma': student.turma,
-                'Notas': student.notas,
-            }));
-            const ws = XLSX.utils.json_to_sheet(customData);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Alunos_Resumo');
-            XLSX.writeFile(wb, 'Alunos_Resumo.xlsx');
-            setMessage('Ficheiro Excel "${filename}" descarregado com sucesso!');
-            setTimeout(() => setMessage(''), 3000);
-        } catch (error: any) {
-            setMessage(`Error: ${error.message}`);
-        }
-    };
-*/
-    // Atualizar dados
     const refreshData = async () => {
-        setError('');
+        if (!professorId) return;
         setLoading(true);
         try {
-            const response = await fetch('/api/alunos');
+            const response = await fetch(`/api/alunos/${professorId}`);
             if (!response.ok) throw new Error('Failed to fetch');
             const data = await response.json();
             setStudents(data);
-            setMessage('Dados atualizados!');
-            setTimeout(() => setMessage(''), 2000);
+            showMessage('Dados atualizados com sucesso!', 'success');
         } catch {
-            setError('Erro ao ligar ao backend.');
+            showMessage('Erro ao ligar ao backend.', 'error');
         } finally {
             setLoading(false);
         }
     };
 
-    // Loading state
+    const showMessage = (msg: string, type: 'success' | 'error') => {
+        setMessage(msg);
+        setMessageType(type);
+        setTimeout(() => setMessage(''), 3000);
+    };
+
+    // Contar turmas únicas
+    const turmasUnicas = new Set(students.map(s => s.turma)).size;
+
     if (loading) {
-        return <div className="loading">Loading...</div>;
+        return <div className="excel-loading">A carregar dados...</div>;
     }
 
     return (
         <IsLoggedIn>
-            <div className="container">
-                <h1 className="title">
-                    Excel Export — Real DB Data
-                </h1>
+            <div className="excel-container">
+                {/* ── Back Button ── */}
+                <button onClick={() => navigate(-1)} className="excel-back-btn">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
+                    Voltar
+                </button>
 
-                {/* Error message */}
-                {error && (
-                    <div className="error-box">
-                        <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px' }}>error</span>
-                        {error}
+                {/* ── Header ── */}
+                <header className="excel-header">
+                    <div>
+                        <h1>Exportar Dados</h1>
+                        <p className="excel-header-sub">Exporta os dados de todos os teus alunos para um ficheiro Excel.</p>
                     </div>
-                )}
+                    <div className="excel-actions">
+                        <button onClick={exportToExcel} className="excel-btn primary">
+                            <span className="material-symbols-outlined">download</span>
+                            Exportar Tudo
+                        </button>
+                        <button onClick={refreshData} className="excel-btn secondary">
+                            <span className="material-symbols-outlined">refresh</span>
+                            Atualizar
+                        </button>
+                    </div>
+                </header>
 
-                {/* Status message */}
+                {/* ── Toast Message ── */}
                 {message && (
-                    <div className="success-box">
-                        <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px' }}>check_circle</span>
+                    <div className={`excel-toast ${messageType}`}>
+                        <span className="material-symbols-outlined">
+                            {messageType === 'success' ? 'check_circle' : 'error'}
+                        </span>
                         {message}
                     </div>
                 )}
 
-                {/* Export buttons */}
-                <div className="button-group">
-                    <button
-                        onClick={exportToExcel}
-                        className="btn btn-green"
-                    >
-                        Export All Data
-                    </button>
+                {/* ── Stats Row ── */}
+                <section className="excel-stats">
+                    <div className="excel-stat-card">
+                        <div className="excel-stat-icon" style={{ backgroundColor: '#e0e7ff', color: '#4f46e5' }}>
+                            <span className="material-symbols-outlined">school</span>
+                        </div>
+                        <div className="excel-stat-info">
+                            <h3>{students.length}</h3>
+                            <p>Total de Alunos</p>
+                        </div>
+                    </div>
+                    <div className="excel-stat-card">
+                        <div className="excel-stat-icon" style={{ backgroundColor: '#fef3c7', color: '#d97706' }}>
+                            <span className="material-symbols-outlined">groups</span>
+                        </div>
+                        <div className="excel-stat-info">
+                            <h3>{turmasUnicas}</h3>
+                            <p>Turmas</p>
+                        </div>
+                    </div>
+                    <div className="excel-stat-card">
+                        <div className="excel-stat-icon" style={{ backgroundColor: '#d1fae5', color: '#059669' }}>
+                            <span className="material-symbols-outlined">table_chart</span>
+                        </div>
+                        <div className="excel-stat-info">
+                            <h3>{students.length > 0 ? 4 : 0}</h3>
+                            <p>Colunas no Excel</p>
+                        </div>
+                    </div>
+                </section>
 
+                {/* ── Table Panel ── */}
+                <div className="excel-panel">
+                    <div className="excel-panel-header">
+                        <h2>Pré-visualização dos Dados</h2>
+                        <Link to="/ver-todos-alunos" className="excel-btn secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>visibility</span>
+                            Ver Todos
+                        </Link>
+                    </div>
 
-                    {/* Exportar com colunas personalizadas (ainda não implementado/exemplo) */}
-                    {/*
-                <button
-                    onClick={exportCustomColumns}
-                    style={{
-                        padding: '0.75rem 1.5rem',
-                        backgroundColor: '#3b82f6',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '1rem',
-                        fontWeight: 'bold',
-                        transition: 'background-color 0.2s'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
-                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#3b82f6'}
-                >
-                    Export Custom (ID, Nome, Email, Turma)
-                </button>
-*/}
-                    <button
-                        onClick={refreshData}
-                        className="btn btn-purple"
-                    >
-                        Atualizar dados
-                    </button>
+                    {students.length === 0 ? (
+                        <div className="excel-empty">
+                            <span className="material-symbols-outlined" style={{ fontSize: '3rem', marginBottom: '0.5rem', display: 'block' }}>folder_off</span>
+                            <p>Ainda não tens alunos registados.</p>
+                        </div>
+                    ) : (
+                        <div className="excel-table-wrap">
+                            <table className="excel-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>Turma</th>
+                                        <th>Diagnóstico</th>
+                                        <th>Diretor de Turma</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {students.map((student) => (
+                                        <tr key={student.id}>
+                                            <td className="td-nome">{student.nome}</td>
+                                            <td><span className="td-turma">{student.turma}</span></td>
+                                            <td className="td-diagnostico">{student.notas || '—'}</td>
+                                            <td>{student.diretorTurma || 'N/A'}</td>
+                                            <td>
+                                                <Link to={`/exportar-aluno/${student.id}`} className="excel-link-edit">
+                                                    <span className="material-symbols-outlined">file_download</span>
+                                                    Individual
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
                 </div>
 
-                {/* Student table */}
-                <h2 className="subtitle">
-                    Alunos da base de dados ({students.length})
-                </h2>
-
-                <div className="table-wrapper">
-                    <table className="student-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Turma</th>
-                                <th>Diagnóstico</th>
-                                <th>Diretor de turma</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {students.map((student) => (
-                                <tr key={student.id}>
-                                    <td>{student.id}</td>
-                                    <td>{student.nome}</td>
-                                    <td>{student.turma}</td>
-                                    <td>{student.notas}</td>
-                                    <td>{student.diretorTurma}</td>
-                                    <td>
-                                        <Link to={`/editar-aluno/${student.id}`} className="btn btn-view">
-                                            Editar
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Instruções por fazer
-            <div style={{
-                marginTop: '2rem',
-                padding: '1rem',
-                backgroundColor: '#f0f9ff',
-                border: '1px solid #bae6fd',
-                borderRadius: '6px'
-            }}>
-                <h3 style={{ marginTop: 0, color: '#0369a1' }}>💡 Como usar:</h3>
-                <ul style={{ color: '#0c4a6e', lineHeight: '1.6' }}>
-                    <li><strong>Exportar Todos os Dados:</strong> Faz o download de um ficheiro Excel com todos os dados dos alunos da base de dados</li>
-                    <li><strong>Exportar Dados Personalizados:</strong> Faz o download apenas das colunas selecionadas (ID, Nome, Email, Turma, Notas)</li>
-                    <li><strong>Atualizar Dados:</strong> Atualiza os dados mais recentes da base de dados</li>
-                </ul>
-            </div>
-            */}
             </div>
         </IsLoggedIn>
     );

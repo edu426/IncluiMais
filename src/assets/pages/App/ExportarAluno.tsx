@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
-import './ExcelTest.css';
+import './ExportarAluno.css';
 import IsLoggedIn from '../../functions/IsLoggedIn';
 import { useUser } from '@clerk/clerk-react';
 

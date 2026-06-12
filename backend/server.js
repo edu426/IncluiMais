@@ -61,7 +61,7 @@ app.post("/api/sync", async (req, res) => {
                 <p style="color: #aaa; margin: 8px 0 0 0; font-size: 0.9rem;">Gestão de Apoio Educativo</p>
               </div>
               <div style="padding: 40px 32px;">
-                <h2 style="color: #1a1a1a; margin: 0 0 12px 0; font-size: 1.5rem;">Olá, ${firstName}! 👋</h2>
+                <h2 style="color: #1a1a1a; margin: 0 0 12px 0; font-size: 1.5rem;">Olá, ${firstName}!</h2>
                 <p style="color: #555; line-height: 1.7; margin: 0 0 24px 0;">
                   Bem-vindo ao <strong>Inclui+</strong>! A tua conta foi criada com sucesso. Estamos muito contentes por teres escolhido a nossa plataforma para apoiar o teu trabalho.
                 </p>
@@ -384,6 +384,60 @@ app.put("/api/atividades/:id", async (req, res) => {
     res.json(atividade);
   } catch (error) {
     res.status(500).json({ error: "Erro ao atualizar atividade." });
+  }
+});
+
+// GET terapias de um aluno
+app.get("/api/terapias/:alunoId", async (req, res) => {
+  const { alunoId } = req.params;
+  try {
+    const record = await prisma.Terapias.findUnique({ where: { alunoId } });
+    res.json(record || {
+      fisioterapia: false,
+      terapiaFala: false,
+      terapiaOcupacional: false,
+      psicologia: false,
+      outros: false,
+      outrosDescricao: null,
+      notasTerapia: null,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Erro ao buscar terapias." });
+  }
+});
+
+// PUT atualizar (ou criar) terapias de um aluno
+app.put("/api/terapias/:alunoId", async (req, res) => {
+  const { alunoId } = req.params;
+  const { fisioterapia, terapiaFala, terapiaOcupacional, psicologia, outros, outrosDescricao, notasTerapia } = req.body;
+
+  try {
+    const record = await prisma.Terapias.upsert({
+      where: { alunoId },
+      update: {
+        fisioterapia: fisioterapia ?? false,
+        terapiaFala: terapiaFala ?? false,
+        terapiaOcupacional: terapiaOcupacional ?? false,
+        psicologia: psicologia ?? false,
+        outros: outros ?? false,
+        outrosDescricao: outros ? (outrosDescricao || null) : null,
+        notasTerapia: notasTerapia || null,
+      },
+      create: {
+        alunoId,
+        fisioterapia: fisioterapia ?? false,
+        terapiaFala: terapiaFala ?? false,
+        terapiaOcupacional: terapiaOcupacional ?? false,
+        psicologia: psicologia ?? false,
+        outros: outros ?? false,
+        outrosDescricao: outros ? (outrosDescricao || null) : null,
+        notasTerapia: notasTerapia || null,
+      },
+    });
+    res.json(record);
+  } catch (error) {
+    console.error("Erro ao atualizar terapias:", error);
+    res.status(500).json({ error: "Erro ao atualizar terapias." });
   }
 });
 

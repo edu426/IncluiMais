@@ -25,9 +25,10 @@ model Alunos {
   updatedAt    DateTime   @updatedAt
   presenca     Presenca[]
   professor    Professor  @relation(fields: [professorId], references: [id])
-
-  MSAI MSAI[]
+  MSAI         MSAI[]
+  Terapias     Terapias[]
 }
+
 model Atividades{
   id          String   @id @default(cuid())
   resumo      String    /// @encrypted
@@ -55,4 +56,18 @@ model Presenca { //vai deixar de ser so para presenças e vai passar a ser para 
   atividades Atividades[]
 }
 
+model Terapias {
+  id                 String  @id @default(cuid())
+  alunoId            String  @unique
+  fisioterapia       Boolean @default(false)
+  terapiaFala        Boolean @default(false)
+  terapiaOcupacional Boolean @default(false)
+  psicologia         Boolean @default(false)
+  outros             Boolean @default(false)
+  outrosDescricao    String? /// @encrypted
+  notasTerapia       String? /// @encrypted
+  aluno              Alunos  @relation(fields: [alunoId], references: [id])
+}
+
 //professorId deve ser irrelevante (substituido pela string diretorTurma)
+

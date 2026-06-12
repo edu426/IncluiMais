@@ -13,6 +13,7 @@ Ferramentas
     > --EXPRIMENTAL-- ao escrever no "Diagnostico" fzr resumo de AI sobre o problema.
     > Guia dos Problema (se for algo simples )
     > Incriptar dados sensiveis. - feito (prisma-field-encryption)
+    > nodemailer - feito
 
 
 Exportar
@@ -31,7 +32,7 @@ Editar Alunos
     > Razao da falta justificada + tirar vermelho das faltas justificadas - feito
     > Nome do diretor de turma - feito
     > Medidas de Suporte à Aprendizagem e à Inclusão(MSAI) - feito
-    > Adicionar tabela "Terapias"
+    > Adicionar tabela "Terapias" - feito
     > Mudar nome de "Notas" para "Diagnostico" - feito
     >Estrategias de ensino orientadas ao perfil do aluno (professor preenche mais uma caixa de texto basica)
 

@@ -9,9 +9,9 @@ function MainHeader() {
     return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
             <header>
-                <Link to="/dashboard" className="logo" style={{ backgroundColor: '#222222'}}>
-                    <img src="/src/assets/images/SPHELP_noBG.png" alt="SPHELP" width={60} height={50} />
-                    SPHelp
+                <Link to="/dashboard" className="logo">
+                    <img src="/src/assets/images/incluimais.png" alt="Inclui+" width={60} height={50} />
+                    Inclui +
                 </Link>
                 <nav className="nav-links">
                     <Link to="/ajuda" className="nav-link" id="ajuda">Ajuda</Link>
@@ -39,7 +39,6 @@ function MainHeader() {
                     <a href="#">Contacto</a>
                 </div>
                 <div className="footer-info">
-                    <p>&copy; 2024 SPHelp. Todos os direitos reservados.</p>
                     <p>Desenvolvido para apoiar os profissionais de Educação Especial.</p>
                 </div>
             </footer>

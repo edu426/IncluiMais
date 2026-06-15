@@ -74,16 +74,8 @@ app.post("/api/sync", async (req, res) => {
                     <li>Exportar relatórios para Excel</li>
                   </ul>
                 </div>
-                <div style="text-align: center;">
-                  <a href="https://sphelp.vercel.app/dashboard" style="display: inline-block; background: #1a1a1a; color: #f4d77e; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 1rem;">
-                    Ir para a Dashboard →
-                  </a>
-                </div>
               </div>
               <div style="background: #f9fafb; padding: 20px 32px; border-top: 1px solid #f3f4f6; text-align: center;">
-                <p style="margin: 0; color: #aaa; font-size: 0.8rem;">
-                  Tens dúvidas? Visita a nossa <a href="https://sphelp.vercel.app/ajuda" style="color: #555;">Central de Ajuda</a>.
-                </p>
               </div>
             </div>
           `,

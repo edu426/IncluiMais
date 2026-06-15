@@ -32,8 +32,8 @@ function Home() {
                     )}
                 </div>
                 <div className="hero-image">
-                    <img id="laptop" className="floating-img laptop-img" src="src/assets/images/laptop_early.png" alt="SPHelp Dashboard Preview" />
-                    <img id="phone" className="floating-img phone-img" src="src/assets/images/phone.png" alt="SPHelp Dashboard Preview mobile" />
+                    <img id="laptop" className="floating-img laptop-img" src="src/assets/images/laptop_early.png" alt="Inclui + Dashboard Preview" />
+                    <img id="phone" className="floating-img phone-img" src="src/assets/images/phone.png" alt="Inclui + Dashboard Preview mobile" />
                 </div>
             </section>
 
@@ -74,7 +74,7 @@ function Home() {
             <section className="impact">
                 <div className="impact-content">
                     <h2>Mais tempo para o que importa.</h2>
-                    <p>O SPHelp foi desenhado para eliminar a carga burocrática, permitindo que se foque no ensino e no apoio direto aos seus alunos.</p>
+                    <p>Inclui + foi desenhado para eliminar a carga burocrática, permitindo que se foque no ensino e no apoio direto aos seus alunos.</p>
                     <div className="impact-stats">
                         <div className="impact-stat">
                             <h3>100%</h3>
@@ -117,11 +117,11 @@ function Home() {
             <footer className="footer">
                 <div className="footer-content">
                     <div className="footer-brand">
-                        <h2>SPHelp</h2>
+                        <h2></h2>
                         <p>A sua plataforma de gestão educativa para educação especial.</p>
                     </div>
                     <div className="footer-links">
-                        <p>&copy; {new Date().getFullYear()} SPHelp. Todos os direitos reservados.</p>
+                        <p>&copy; {new Date().getFullYear()} Inclui +. Todos os direitos reservados.</p>
                     </div>
                 </div>
             </footer>

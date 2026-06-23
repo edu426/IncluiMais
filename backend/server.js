@@ -97,7 +97,7 @@ app.post("/api/sync", async (req, res) => {
 //-------------Criação de dados-------------
 // POST criar novo aluno
 app.post("/api/alunos", async (req, res) => {
-  const { nome, turma, notas, professorId, foto, dataNasc, diretorTurma } = req.body;
+  const { nome, turma, notas, estrategias, professorId, foto, dataNasc, diretorTurma } = req.body;
 
   if (!nome || !turma || !notas || !professorId) {
     return res.status(400).json({ error: "Todos os campos obrigatórios não foram preenchidos." });
@@ -109,6 +109,7 @@ app.post("/api/alunos", async (req, res) => {
         nome,
         turma,
         notas,
+        ...(estrategias !== undefined ? { estrategias } : {}),
         professorId,
         foto,
         ...(dataNasc ? { dataNasc: new Date(dataNasc) } : {}),
@@ -193,7 +194,7 @@ app.get("/api/alunos/recentes", async (req, res) => {
 // Chamado pelo EditarAluno.tsx quando o utilizador clica em "Guardar" depois de editar
 app.put("/api/alunos/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, turma, notas, foto, dataNasc, diretorTurma } = req.body;
+  const { nome, turma, notas, estrategias, foto, dataNasc, diretorTurma } = req.body;
 
   // Validar os campos necessários
   if (!nome || !turma || !notas) {
@@ -208,6 +209,7 @@ app.put("/api/alunos/:id", async (req, res) => {
         nome,
         turma,
         notas,
+        ...(estrategias !== undefined ? { estrategias } : {}),
         foto,
         ...(dataNasc ? { dataNasc: new Date(dataNasc) } : {}),
         ...(diretorTurma !== undefined ? { diretorTurma } : {}),

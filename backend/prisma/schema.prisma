@@ -14,27 +14,39 @@ model Professor {
 }
 
 model Alunos {
-  id           String     @id @default(cuid())
-  nome         String     /// @encrypted
+  id           String       @id @default(cuid())
+  nome         String /// @encrypted
   turma        String
-  dataNasc     DateTime   @default(now())
-  diretorTurma String     @default("N/A")
+  dataNasc     DateTime     @default(now())
+  diretorTurma String       @default("N/A") /// @encrypted
   professorId  String
-  notas        String     @default("") /// @encrypted
+  notas        String       @default("") /// @encrypted
+  estrategias  String       @default("") /// @encrypted
   foto         String?
-  updatedAt    DateTime   @updatedAt
+  updatedAt    DateTime     @updatedAt
   presenca     Presenca[]
-  professor    Professor  @relation(fields: [professorId], references: [id])
+  professor    Professor    @relation(fields: [professorId], references: [id])
   MSAI         MSAI[]
   Terapias     Terapias[]
+  Encaregado   Encaregado[]
 }
 
-model Atividades{
-  id          String   @id @default(cuid())
-  resumo      String    /// @encrypted
-  concluida   Boolean  
-  presencaId  String?
-  presenca    Presenca? @relation(fields: [presencaId], references: [id], onDelete: Cascade)
+model Encaregado {
+  id       String @id @default(cuid())
+  nome     String @default("") /// @encrypted
+  tipo     String @default("") /// @encrypted
+  email    String @default("") /// @encrypted
+  telefone String @default("") /// @encrypted
+  alunoId  String
+  aluno    Alunos @relation(fields: [alunoId], references: [id])
+}
+
+model Atividades {
+  id         String    @id @default(cuid())
+  resumo     String /// @encrypted
+  concluida  Boolean
+  presencaId String?
+  presenca   Presenca? @relation(fields: [presencaId], references: [id], onDelete: Cascade)
 }
 
 model MSAI {
@@ -44,16 +56,16 @@ model MSAI {
   aluno   Alunos @relation(fields: [alunoId], references: [id])
 }
 
-model Presenca { //vai deixar de ser so para presenças e vai passar a ser para aulas/apoio
-  id        String   @id @default(cuid())
-  alunoId   String
-  data      DateTime @default(now())
-  sumario   String   @default("N/A") /// @encrypted
-  presente  Boolean
-  justifica Boolean
-  justificacao String?   /// @encrypted
-  aluno     Alunos   @relation(fields: [alunoId], references: [id])
-  atividades Atividades[]
+model Presenca {
+  id           String       @id @default(cuid())
+  alunoId      String
+  data         DateTime     @default(now())
+  sumario      String       @default("N/A") /// @encrypted
+  presente     Boolean
+  justifica    Boolean
+  justificacao String? /// @encrypted
+  aluno        Alunos       @relation(fields: [alunoId], references: [id])
+  atividades   Atividades[]
 }
 
 model Terapias {
@@ -70,4 +82,3 @@ model Terapias {
 }
 
 //professorId deve ser irrelevante (substituido pela string diretorTurma)
-

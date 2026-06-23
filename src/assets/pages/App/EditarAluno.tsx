@@ -11,6 +11,7 @@ interface Student {
     nome: string;
     turma: string;
     notas: string;
+    estrategias: string;
     professorId: string;
     foto?: string;
     dataNasc?: string;
@@ -86,7 +87,7 @@ export default function EditarAluno() {
     const [isEditing, setIsEditing] = useState(false);
 
     // Guarda os valores iniciais enquanto se edita
-    const [form, setForm] = useState({ nome: '', turma: '', notas: '', foto: '', dataNasc: '', diretorTurma: '' });
+    const [form, setForm] = useState({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '' });
 
     // MSAI State
     const [msai, setMsai] = useState("000000000000000");
@@ -164,7 +165,7 @@ export default function EditarAluno() {
 
                 // insere os valores iniciais nos campos
                 const formattedDate = data.dataNasc ? new Date(data.dataNasc).toISOString().split('T')[0] : '';
-                setForm({ nome: data.nome, turma: data.turma, notas: data.notas, foto: data.foto || '', dataNasc: formattedDate, diretorTurma: data.diretorTurma || '' });
+                setForm({ nome: data.nome, turma: data.turma, notas: data.notas, estrategias: data.estrategias || '', foto: data.foto || '', dataNasc: formattedDate, diretorTurma: data.diretorTurma || '' });
 
                 // Fetch MSAI
                 const msaiResponse = await fetch(`/api/msai/${id}`);
@@ -281,7 +282,7 @@ export default function EditarAluno() {
     const handleCancel = () => {
         if (aluno) {
             const formattedDate = aluno.dataNasc ? new Date(aluno.dataNasc).toISOString().split('T')[0] : '';
-            setForm({ nome: aluno.nome, turma: aluno.turma, notas: aluno.notas, foto: aluno.foto || '', dataNasc: formattedDate, diretorTurma: aluno.diretorTurma || '' });
+            setForm({ nome: aluno.nome, turma: aluno.turma, notas: aluno.notas, estrategias: aluno.estrategias || '', foto: aluno.foto || '', dataNasc: formattedDate, diretorTurma: aluno.diretorTurma || '' });
         }
         setMsai(originalMsai);
         setTerapias(originalTerapias);
@@ -565,6 +566,21 @@ export default function EditarAluno() {
                                     {isEditing
                                         ? <textarea className="edit-input edit-textarea" name="notas" value={form.notas} onChange={handleChange} />
                                         : <span className="info-value">{aluno.notas}</span>
+                                    }
+                                </div>
+
+                                <div className="info-row" style={{ marginTop: '0.5rem' }}>
+                                    <span className="info-label">
+                                        Estratégias de Intervenção
+                                        <span 
+                                            data-tooltip="Estratégias a aplicar com este aluno"
+                                            className="material-symbols-outlined"
+                                            style={{ fontSize: '0.95rem', color: '#bbb', verticalAlign: 'middle', marginLeft: '5px', cursor: 'help' }}
+                                        >info</span>
+                                    </span>
+                                    {isEditing
+                                        ? <textarea className="edit-input edit-textarea" name="estrategias" value={form.estrategias} onChange={handleChange} placeholder="Descreva as estratégias de intervenção..." />
+                                        : <span className="info-value">{aluno.estrategias || 'Nenhuma estratégia definida.'}</span>
                                     }
                                 </div>
                             </div>

@@ -12,6 +12,7 @@ export default function AdicionarAluno() {
         nome: '',
         turma: '',
         notas: '',
+        estrategias: '',
         foto: '',
         dataNasc: '',
         diretorTurma: '',
@@ -77,7 +78,7 @@ export default function AdicionarAluno() {
             }
 
             setSuccess(`Aluno "${data.nome}" adicionado com sucesso!`);
-            setForm({ nome: '', turma: '', notas: '', foto: '', dataNasc: '', diretorTurma: '' });
+            setForm({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '' });
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -153,6 +154,17 @@ export default function AdicionarAluno() {
                                 value={form.notas}
                                 onChange={handleChange}
                                 required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="estrategias">Estratégias de Intervenção (Opcional)</label>
+                            <textarea
+                                id="estrategias"
+                                name="estrategias"
+                                placeholder="Ex: Sentar na fila da frente..."
+                                value={form.estrategias}
+                                onChange={handleChange}
                             />
                         </div>
 

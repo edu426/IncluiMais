@@ -1,3 +1,5 @@
+<img width="250" height="250" alt="inclmais-removebg-preview" src="https://github.com/edu426/SPHelp/blob/main/src/assets/images/inclmais-removebg-preview.png" />
+
 # Inclui + - Plataforma de Gestão Inclusiva
 
 Inclui + é uma plataforma web moderna e segura desenvolvida para auxiliar professores (nomeadamente de Educação Especial) na gestão de processos dos seus alunos. Permite centralizar de forma rápida e elegante informações essenciais, como as Medidas de Suporte à Aprendizagem e à Inclusão (MSAI), Terapias, Assiduidades, Atividades e contactos dos Encarregados de Educação.

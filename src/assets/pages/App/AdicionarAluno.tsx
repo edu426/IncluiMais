@@ -16,6 +16,7 @@ export default function AdicionarAluno() {
         foto: '',
         dataNasc: '',
         diretorTurma: '',
+        encarregado: { nome: '', tipo: '', email: '', telefone: '' }
     });
 
     const [loading, setLoading] = useState(false);
@@ -42,6 +43,10 @@ export default function AdicionarAluno() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleEncarregadoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({ ...form, encarregado: { ...form.encarregado, [e.target.name]: e.target.value } });
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -63,6 +68,16 @@ export default function AdicionarAluno() {
             return;
         }
 
+        if (form.encarregado.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.encarregado.email)) {
+            setError('Por favor, insere um e-mail válido para o encarregado de educação.');
+            return;
+        }
+
+        if (form.encarregado.telefone && !/^\+?[0-9\s-]{9,}$/.test(form.encarregado.telefone)) {
+            setError('Por favor, insere um número de telefone válido (mínimo 9 dígitos).');
+            return;
+        }
+
         setLoading(true);
         try {
             const response = await fetch('/api/alunos', {
@@ -78,7 +93,7 @@ export default function AdicionarAluno() {
             }
 
             setSuccess(`Aluno "${data.nome}" adicionado com sucesso!`);
-            setForm({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '' });
+            setForm({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '', encarregado: { nome: '', tipo: '', email: '', telefone: '' } });
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -94,9 +109,12 @@ export default function AdicionarAluno() {
                 <h1>Adicionar Aluno</h1>
                 <p className="subtitle">Preenche os dados para adicionar um novo aluno à base de dados.</p>
 
-                <div className="add-student-card">
-                    <form className="add-student-form" onSubmit={handleSubmit}>
-                        <div className="form-group">
+                <form className="add-student-form" onSubmit={handleSubmit}>
+                    <div className="add-student-layout">
+                        {/* ── Esquerda: Informações do Aluno ── */}
+                        <div className="add-student-card student-info-card">
+                            <h2 style={{ marginBottom: '1.5rem', color: '#1a1a1a', fontSize: '1.3rem' }}>Dados do Aluno</h2>
+                            <div className="form-group">
                             <label htmlFor="nome">Nome</label>
                             <input
                                 id="nome"
@@ -123,18 +141,19 @@ export default function AdicionarAluno() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="dataNasc">Data de Nascimento (Opcional)</label>
+                            <label htmlFor="dataNasc">Data de Nascimento</label>
                             <input
                                 id="dataNasc"
                                 name="dataNasc"
                                 type="date"
                                 value={form.dataNasc}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="diretorTurma">Diretor de Turma (Opcional)</label>
+                            <label htmlFor="diretorTurma">Diretor de Turma</label>
                             <input
                                 id="diretorTurma"
                                 name="diretorTurma"
@@ -142,18 +161,18 @@ export default function AdicionarAluno() {
                                 placeholder="Ex: Prof. Maria"
                                 value={form.diretorTurma}
                                 onChange={handleChange}
+                                required
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="notas">Diagnóstico</label>
+                            <label htmlFor="notas">Diagnóstico (Opcional)</label>
                             <textarea
                                 id="notas"
                                 name="notas"
                                 placeholder="Ex: TDAH"
                                 value={form.notas}
                                 onChange={handleChange}
-                                required
                             />
                         </div>
 
@@ -183,12 +202,74 @@ export default function AdicionarAluno() {
                                 </div>
                             )}
                         </div>
+                    </div>
 
-                        <button type="submit" className="btn-submit" disabled={loading}>
-                            {loading ? 'A guardar...' : 'Adicionar Aluno'}
-                        </button>
-                    </form>
+                    {/* ── Direita: Encarregado de Educação ── */}
+                    <div className="add-student-card encarregado-card">
+                        <h2 style={{ marginBottom: '1.5rem', color: '#1a1a1a', fontSize: '1.3rem' }}>Encarregado de Educação</h2>
 
+                        <div className="form-group">
+                            <label htmlFor="encarregadoNome">Nome do Encarregado</label>
+                            <input
+                                id="encarregadoNome"
+                                name="nome"
+                                type="text"
+                                placeholder="Ex: Maria Santos"
+                                value={form.encarregado.nome}
+                                onChange={handleEncarregadoChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="encarregadoTipo">Parentesco</label>
+                            <input
+                                id="encarregadoTipo"
+                                name="tipo"
+                                type="text"
+                                placeholder="Ex: Mãe, Pai, Tutor"
+                                value={form.encarregado.tipo}
+                                onChange={handleEncarregadoChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="encarregadoEmail">E-mail</label>
+                            <input
+                                id="encarregadoEmail"
+                                name="email"
+                                type="email"
+                                placeholder="Ex: maria.santos@email.com"
+                                value={form.encarregado.email}
+                                onChange={handleEncarregadoChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="encarregadoTelefone">Telefone</label>
+                            <input
+                                id="encarregadoTelefone"
+                                name="telefone"
+                                type="tel"
+                                placeholder="Ex: 912345678"
+                                value={form.encarregado.telefone}
+                                onChange={handleEncarregadoChange}
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
+                    <button type="submit" className="btn-submit btn-large" disabled={loading}>
+                        {loading ? 'A guardar...' : 'Adicionar Aluno'}
+                    </button>
+                </div>
+                </form>
+
+                <div className="feedback-messages" style={{ marginTop: '1rem' }}>
                     {success && (
                         <div className="feedback-success">
                             <span className="material-symbols-outlined" style={{ verticalAlign: 'middle', marginRight: '5px', fontSize: '1.2rem' }}>check_circle</span>

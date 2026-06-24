@@ -38,7 +38,7 @@ model Encaregado {
   email    String @default("") /// @encrypted
   telefone String @default("") /// @encrypted
   alunoId  String
-  aluno    Alunos @relation(fields: [alunoId], references: [id])
+  aluno    Alunos @relation(fields: [alunoId], references: [id], onDelete: Cascade)
 }
 
 model Atividades {
@@ -53,7 +53,7 @@ model MSAI {
   id      String @id @default(cuid())
   alunoId String
   msai    String @default("000000000000000") @db.Bit(15)
-  aluno   Alunos @relation(fields: [alunoId], references: [id])
+  aluno   Alunos @relation(fields: [alunoId], references: [id], onDelete: Cascade)
 }
 
 model Presenca {
@@ -64,7 +64,7 @@ model Presenca {
   presente     Boolean
   justifica    Boolean
   justificacao String? /// @encrypted
-  aluno        Alunos       @relation(fields: [alunoId], references: [id])
+  aluno        Alunos       @relation(fields: [alunoId], references: [id], onDelete: Cascade)
   atividades   Atividades[]
 }
 
@@ -78,7 +78,7 @@ model Terapias {
   outros             Boolean @default(false)
   outrosDescricao    String? /// @encrypted
   notasTerapia       String? /// @encrypted
-  aluno              Alunos  @relation(fields: [alunoId], references: [id])
+  aluno              Alunos  @relation(fields: [alunoId], references: [id], onDelete: Cascade)
 }
 
 //professorId deve ser irrelevante (substituido pela string diretorTurma)

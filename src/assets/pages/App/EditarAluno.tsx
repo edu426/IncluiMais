@@ -16,6 +16,7 @@ interface Student {
     foto?: string;
     dataNasc?: string;
     diretorTurma?: string;
+    Encaregado?: any[];
 }
 
 // Objeto que representa as terapias do aluno
@@ -87,7 +88,7 @@ export default function EditarAluno() {
     const [isEditing, setIsEditing] = useState(false);
 
     // Guarda os valores iniciais enquanto se edita
-    const [form, setForm] = useState({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '' });
+    const [form, setForm] = useState({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '', encarregado: { nome: '', tipo: '', email: '', telefone: '' } });
 
     // MSAI State
     const [msai, setMsai] = useState("000000000000000");
@@ -117,7 +118,25 @@ export default function EditarAluno() {
         resumoAtividade: '',
         concluida: false,
     });
+    const [newAula, setNewAula] = useState({ date: new Date().toISOString().split('T')[0], sumario: '', justificado: false, justificacao: '' });
     const [addingAula, setAddingAula] = useState(false);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deletingAluno, setDeletingAluno] = useState(false);
+
+    const handleDeleteAluno = async () => {
+        setDeletingAluno(true);
+        try {
+            const res = await fetch(`/api/alunos/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Erro ao eliminar aluno.');
+            toast.success('Aluno eliminado com sucesso!');
+            navigate('/dashboard');
+        } catch (err: any) {
+            toast.error(err.message || 'Ocorreu um erro ao eliminar.');
+            setDeletingAluno(false);
+            setShowDeleteModal(false);
+        }
+    };
 
 
     // Justification inline edit
@@ -165,7 +184,8 @@ export default function EditarAluno() {
 
                 // insere os valores iniciais nos campos
                 const formattedDate = data.dataNasc ? new Date(data.dataNasc).toISOString().split('T')[0] : '';
-                setForm({ nome: data.nome, turma: data.turma, notas: data.notas, estrategias: data.estrategias || '', foto: data.foto || '', dataNasc: formattedDate, diretorTurma: data.diretorTurma || '' });
+                const enc = data.Encaregado && data.Encaregado.length > 0 ? data.Encaregado[0] : { nome: '', tipo: '', email: '', telefone: '' };
+                setForm({ nome: data.nome, turma: data.turma, notas: data.notas, estrategias: data.estrategias || '', foto: data.foto || '', dataNasc: formattedDate, diretorTurma: data.diretorTurma || '', encarregado: { nome: enc.nome || '', tipo: enc.tipo || '', email: enc.email || '', telefone: enc.telefone || '' } });
 
                 // Fetch MSAI
                 const msaiResponse = await fetch(`/api/msai/${id}`);
@@ -218,6 +238,10 @@ export default function EditarAluno() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleEncarregadoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({ ...form, encarregado: { ...form.encarregado, [e.target.name]: e.target.value } });
+    };
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -237,6 +261,16 @@ export default function EditarAluno() {
 
     // Envia os dados para o PUT /api/alunos/:id
     const handleSave = async () => {
+        if (form.encarregado.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.encarregado.email)) {
+            toast.error('Por favor, insere um e-mail válido para o encarregado de educação.');
+            return;
+        }
+
+        if (form.encarregado.telefone && !/^\+?[0-9\s-]{9,}$/.test(form.encarregado.telefone)) {
+            toast.error('Por favor, insere um número de telefone válido (mínimo 9 dígitos).');
+            return;
+        }
+
         setSaving(true);
 
         try {
@@ -282,7 +316,8 @@ export default function EditarAluno() {
     const handleCancel = () => {
         if (aluno) {
             const formattedDate = aluno.dataNasc ? new Date(aluno.dataNasc).toISOString().split('T')[0] : '';
-            setForm({ nome: aluno.nome, turma: aluno.turma, notas: aluno.notas, estrategias: aluno.estrategias || '', foto: aluno.foto || '', dataNasc: formattedDate, diretorTurma: aluno.diretorTurma || '' });
+            const enc = aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0] : { nome: '', tipo: '', email: '', telefone: '' };
+            setForm({ nome: aluno.nome, turma: aluno.turma, notas: aluno.notas, estrategias: aluno.estrategias || '', foto: aluno.foto || '', dataNasc: formattedDate, diretorTurma: aluno.diretorTurma || '', encarregado: { nome: enc.nome || '', tipo: enc.tipo || '', email: enc.email || '', telefone: enc.telefone || '' } });
         }
         setMsai(originalMsai);
         setTerapias(originalTerapias);
@@ -583,6 +618,7 @@ export default function EditarAluno() {
                                         : <span className="info-value">{aluno.estrategias || 'Nenhuma estratégia definida.'}</span>
                                     }
                                 </div>
+
                             </div>
 
                             {/* ── Secção Terapias ── */}
@@ -684,6 +720,48 @@ export default function EditarAluno() {
                                         <label className="msai-checkbox"><input type="checkbox" checked={msai[13] === '1'} onChange={() => handleMsaiChange(13)} disabled={!isEditing} />d) O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
                                         <label className="msai-checkbox"><input type="checkbox" checked={msai[14] === '1'} onChange={() => handleMsaiChange(14)} disabled={!isEditing} />e) O desenvolvimento de competências de autonomia pessoal e social</label>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Secção Encarregado de Educação ── */}
+                    <div className="aulas-full-width-container">
+                        <div className="aulas-section" style={{ marginTop: '1rem', marginBottom: '2rem' }}>
+                            <div className="faltas-header">
+                                <h2>Encarregado de Educação</h2>
+                            </div>
+                            <div className="encarregado-grid">
+                                <div className="info-row">
+                                    <span className="info-label">Nome</span>
+                                    {isEditing
+                                        ? <input className="edit-input" name="nome" value={form.encarregado.nome} onChange={handleEncarregadoChange} placeholder="Ex: Maria Santos" />
+                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].nome : 'N/A'}</span>
+                                    }
+                                </div>
+
+                                <div className="info-row">
+                                    <span className="info-label">E-mail</span>
+                                    {isEditing
+                                        ? <input className="edit-input" type="email" name="email" value={form.encarregado.email} onChange={handleEncarregadoChange} placeholder="Ex: maria.santos@email.com" />
+                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].email : 'N/A'}</span>
+                                    }
+                                </div>
+
+                                <div className="info-row">
+                                    <span className="info-label">Parentesco</span>
+                                    {isEditing
+                                        ? <input className="edit-input" name="tipo" value={form.encarregado.tipo} onChange={handleEncarregadoChange} placeholder="Ex: Mãe, Pai, Tutor" />
+                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].tipo : 'N/A'}</span>
+                                    }
+                                </div>
+
+                                <div className="info-row">
+                                    <span className="info-label">Telefone</span>
+                                    {isEditing
+                                        ? <input className="edit-input" type="tel" name="telefone" value={form.encarregado.telefone} onChange={handleEncarregadoChange} placeholder="Ex: 912345678" />
+                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].telefone : 'N/A'}</span>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -971,6 +1049,35 @@ export default function EditarAluno() {
                             )}
                         </div>
                     </div>
+
+                    {/* ── Zona de Perigo ── */}
+                    <div className="danger-zone-container" style={{ marginTop: '3rem', borderTop: '2px dashed #fca5a5', paddingTop: '2rem' }}>
+                        <h2 style={{ color: '#991b1b', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span className="material-symbols-outlined">warning</span> Zona de Perigo
+                        </h2>
+                        <p style={{ color: '#666', marginBottom: '1.5rem', maxWidth: '600px', lineHeight: '1.5' }}>
+                            Atenção: Ao eliminar este aluno, todos os dados associados (Aulas, Terapias, Encarregados e MSAI) serão permanentemente apagados. Esta ação <strong>não pode ser revertida</strong>.
+                        </p>
+                        <button className="btn-danger" onClick={() => setShowDeleteModal(true)}>
+                            Eliminar Aluno
+                        </button>
+                    </div>
+
+                    {showDeleteModal && (
+                        <div className="custom-modal-overlay">
+                            <div className="custom-modal-card">
+                                <span className="material-symbols-outlined danger-icon">delete_forever</span>
+                                <h2>Eliminar Aluno?</h2>
+                                <p>Tens a certeza que pretendes eliminar o aluno <strong>{aluno.nome}</strong>? Esta ação apagará todo o seu historial e não pode ser desfeita.</p>
+                                <div className="custom-modal-actions">
+                                    <button className="btn-cancel" onClick={() => setShowDeleteModal(false)} disabled={deletingAluno}>Cancelar</button>
+                                    <button className="btn-danger" onClick={handleDeleteAluno} disabled={deletingAluno}>
+                                        {deletingAluno ? 'A eliminar...' : 'Sim, Eliminar'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className="ver-aluno-page">

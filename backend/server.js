@@ -97,9 +97,9 @@ app.post("/api/sync", async (req, res) => {
 //-------------Criação de dados-------------
 // POST criar novo aluno
 app.post("/api/alunos", async (req, res) => {
-  const { nome, turma, notas, estrategias, professorId, foto, dataNasc, diretorTurma } = req.body;
+  const { nome, turma, notas, estrategias, professorId, foto, dataNasc, diretorTurma, encarregado } = req.body;
 
-  if (!nome || !turma || !notas || !professorId) {
+  if (!nome || !turma || !professorId || !dataNasc || !diretorTurma) {
     return res.status(400).json({ error: "Todos os campos obrigatórios não foram preenchidos." });
   }
 
@@ -108,12 +108,17 @@ app.post("/api/alunos", async (req, res) => {
       data: {
         nome,
         turma,
-        notas,
+        notas: notas || "",
         ...(estrategias !== undefined ? { estrategias } : {}),
         professorId,
         foto,
-        ...(dataNasc ? { dataNasc: new Date(dataNasc) } : {}),
-        ...(diretorTurma ? { diretorTurma } : {}),
+        dataNasc: new Date(dataNasc),
+        diretorTurma,
+        ...(encarregado && encarregado.nome ? {
+          Encaregado: {
+            create: encarregado
+          }
+        } : {}),
       },
     });
     res.status(201).json(aluno);
@@ -194,10 +199,10 @@ app.get("/api/alunos/recentes", async (req, res) => {
 // Chamado pelo EditarAluno.tsx quando o utilizador clica em "Guardar" depois de editar
 app.put("/api/alunos/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, turma, notas, estrategias, foto, dataNasc, diretorTurma } = req.body;
+  const { nome, turma, notas, estrategias, foto, dataNasc, diretorTurma, encarregado } = req.body;
 
   // Validar os campos necessários
-  if (!nome || !turma || !notas) {
+  if (!nome || !turma || !dataNasc || !diretorTurma) {
     return res.status(400).json({ error: "Todos os campos principais são obrigatórios." });
   }
 
@@ -208,11 +213,17 @@ app.put("/api/alunos/:id", async (req, res) => {
       data: {
         nome,
         turma,
-        notas,
+        notas: notas || "",
         ...(estrategias !== undefined ? { estrategias } : {}),
         foto,
-        ...(dataNasc ? { dataNasc: new Date(dataNasc) } : {}),
-        ...(diretorTurma !== undefined ? { diretorTurma } : {}),
+        dataNasc: new Date(dataNasc),
+        diretorTurma,
+        ...(encarregado ? {
+          Encaregado: {
+            deleteMany: {},
+            ...(encarregado.nome ? { create: encarregado } : {})
+          }
+        } : {}),
       },
     });
 
@@ -234,7 +245,10 @@ app.get("/api/alunos/detalhe/:id", async (req, res) => {
   const { id } = req.params;
   try {
     // findUnique retorna o aluno que corresponde exatamente a este ID
-    const aluno = await prisma.Alunos.findUnique({ where: { id } });
+    const aluno = await prisma.Alunos.findUnique({ 
+        where: { id },
+        include: { Encaregado: true }
+    });
     if (!aluno) return res.status(404).json({ error: "Aluno não encontrado." });
 
     res.json(aluno);
@@ -610,6 +624,18 @@ app.post("/api/suporte", async (req, res) => {
   } catch (error) {
     console.error("Erro ao enviar email de suporte:", error);
     res.status(500).json({ error: "Erro ao enviar mensagem. Tenta novamente mais tarde." });
+  }
+});
+
+// DELETE um aluno pelo ID
+app.delete("/api/alunos/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const aluno = await prisma.Alunos.delete({ where: { id } });
+    res.json({ message: "Aluno eliminado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao eliminar aluno:", error);
+    res.status(500).json({ error: "Erro ao eliminar aluno." });
   }
 });
 

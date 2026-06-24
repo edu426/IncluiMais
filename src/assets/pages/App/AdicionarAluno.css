@@ -130,3 +130,39 @@
 .back-link:hover {
     text-decoration: underline;
 }
+.add-student-page {
+    max-width: 1000px;
+}
+
+.add-student-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.student-info-card {
+    flex: 2;
+}
+
+.encarregado-card {
+    flex: 1;
+    min-width: 320px;
+    position: sticky;
+    top: 2rem;
+}
+
+@media (max-width: 860px) {
+    .add-student-layout {
+        flex-direction: column;
+    }
+    .encarregado-card {
+        width: 100%;
+    }
+}
+
+.btn-large {
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    width: 100%;
+    max-width: 350px;
+}

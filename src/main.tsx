@@ -20,6 +20,19 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Pusblieshable key (Clerk) is missing or invalid.");
 }
 
+// Intercetor global de fetch para suportar o Deploy (Vercel Frontend -> Render Backend)
+const originalFetch = window.fetch;
+window.fetch = async (...args) => {
+  let [resource, config] = args;
+  // Se VITE_API_URL estiver definido, ele adiciona (ex: https://meu-backend.onrender.com)
+  // Se não estiver, ele deixa em branco e funciona normalmente no localhost via Vite
+  const apiUrl = import.meta.env.VITE_API_URL || '';
+  if (typeof resource === 'string' && resource.startsWith('/api')) {
+    resource = `${apiUrl}${resource}`;
+  }
+  return originalFetch(resource, config);
+};
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>

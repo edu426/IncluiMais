@@ -1,4 +1,4 @@
-<img width="250" height="250" alt="inclmais-removebg-preview" src="https://github.com/edu426/SPHelp/blob/main/src/assets/images/inclmais-removebg-preview.png" />
+<img width="250" height="250" alt="inclmais-removebg-preview" src="https://github.com/edu426/IncluiMais/blob/main/public/images/inclmais-removebg-preview.png" />
 
 # Inclui + - Plataforma de Gestão Inclusiva
 

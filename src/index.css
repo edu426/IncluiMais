@@ -1,6 +1,6 @@
 :root {
-    --primary-color: #F8C301;
-    --primary-hover: #E0B000;
+    --primary-color: #1F4E79;
+    --primary-hover: #163959;
     --text-dark: #333333;
     --text-light: #666666;
     --bg-color: #FDFDFD;
@@ -21,7 +21,7 @@ html, body {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, rgba(253, 253, 253, 1) 0%, rgba(248, 195, 1, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(253, 253, 253, 1) 0%, rgba(31, 78, 121, 0.05) 100%);
     color: var(--text-dark);
     margin: 0 auto;
     min-width: 320px;
@@ -113,5 +113,5 @@ input:not([type='file']):not([type='checkbox']):not([type='radio']):focus,
 textarea:focus,
 select:focus {
     border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(248, 195, 1, 0.18) !important;
+    box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.18) !important;
 }

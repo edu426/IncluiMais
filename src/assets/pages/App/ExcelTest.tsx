@@ -153,7 +153,7 @@ export default function ExcelTest() {
                         </div>
                     </div>
                     <div className="excel-stat-card">
-                        <div className="excel-stat-icon" style={{ backgroundColor: '#fef3c7', color: '#d97706' }}>
+                        <div className="excel-stat-icon" style={{ backgroundColor: '#e6f0fa', color: '#1F4E79' }}>
                             <span className="material-symbols-outlined">groups</span>
                         </div>
                         <div className="excel-stat-info">

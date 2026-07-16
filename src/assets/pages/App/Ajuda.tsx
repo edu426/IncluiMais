@@ -68,7 +68,7 @@ export default function Ajuda() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     <div className="ajuda-section">
                         <h2>
-                            <span className="material-symbols-outlined" style={{ color: '#f4d77e' }}>help</span>
+                            <span className="material-symbols-outlined" style={{ color: '#1F4E79' }}>help</span>
                             Perguntas Frequentes (FAQ)
                         </h2>
                         <div className="faq-list">
@@ -178,7 +178,7 @@ export default function Ajuda() {
 
                     <div className="ajuda-section" style={{ backgroundColor: '#222', color: '#fff' }}>
                         <h2 style={{ color: '#fff' }}>
-                            <span className="material-symbols-outlined" style={{ color: '#f4d77e' }}>lock</span>
+                            <span className="material-symbols-outlined" style={{ color: '#1F4E79' }}>lock</span>
                             Privacidade e Segurança
                         </h2>
                         <p style={{ color: '#ccc', lineHeight: '1.6' }}>

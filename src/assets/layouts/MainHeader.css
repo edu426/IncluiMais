@@ -5,7 +5,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(248, 195, 1, 0.25), 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(31, 78, 121, 0.25), 0 2px 8px rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 1000;
 }
@@ -13,7 +13,8 @@ header {
 .logo {
     display: flex;
     align-items: center;
-    gap: 18px; /* Slightly more gap for larger image */
+    gap: 18px;
+    /* Slightly more gap for larger image */
     text-decoration: none;
     padding: 5px 15px 5px 0;
     border-radius: 25px;
@@ -27,21 +28,25 @@ header {
 }
 
 .logo-img {
-    height: 70px; /* Much bigger and more important */
+    height: 70px;
+    /* Much bigger and more important */
     width: auto;
     object-fit: contain;
-    border-radius: 8px; 
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    border-radius: 8px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 .logo-text {
     font-family: 'Poppins-Bold', sans-serif;
-    font-size: 38px; /* Larger */
+    font-size: 38px;
+    /* Larger */
     color: #FFFFFF;
-    font-weight: 800; /* Extra bold */
+    font-weight: 800;
+    /* Extra bold */
     letter-spacing: -0.03em;
     line-height: 1;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.15); /* Adds depth */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    /* Adds depth */
 }
 
 .nav-links {
@@ -52,7 +57,7 @@ header {
 
 .nav-links a {
     font-family: 'Poppins', sans-serif;
-    color: var(--text-dark);
+    color: #FFFFFF;
     text-decoration: none;
     font-size: 18px;
     transition: color 0.3s;

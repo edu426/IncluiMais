@@ -133,7 +133,7 @@ export default function Dashboard() {
                             </div>
 
                             <div className="stat-card">
-                                <div className="stat-icon" style={{ backgroundColor: '#fef3c7', color: '#d97706' }}>
+                                <div className="stat-icon" style={{ backgroundColor: '#e6f0fa', color: '#1F4E79' }}>
                                     <span className="material-symbols-outlined">pending_actions</span>
                                 </div>
                                 <div className="stat-info">

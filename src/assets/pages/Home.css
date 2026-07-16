@@ -210,7 +210,7 @@
     font-size: 4rem;
     font-weight: 800;
     margin: 0;
-    background: linear-gradient(135deg, #F8C301, #FF8C00);
+    background: linear-gradient(135deg, #1F4E79, #122C44);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -254,7 +254,7 @@
 .feature-icon {
     width: 80px;
     height: 80px;
-    background-color: rgba(248, 195, 1, 0.1);
+    background-color: rgba(31, 78, 121, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;

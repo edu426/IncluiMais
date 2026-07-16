@@ -133,7 +133,7 @@ export default function VerTodosAluno() {
                         return (
                             <div className="aluno-card-mini" key={student.id}>
                                 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
-                                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#f4d77e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: '#1a1a1a', overflow: 'hidden' }}>
+                                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#1F4E79', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: '#ffffff', overflow: 'hidden' }}>
                                         {student.foto ? (
                                             <img src={student.foto} alt={`Foto de ${student.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         ) : (

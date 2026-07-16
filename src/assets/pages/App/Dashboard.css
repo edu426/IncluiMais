@@ -17,6 +17,7 @@
 }
 
 .welcome-text {
+    color: #FFFFFF;
     font-size: 2.5rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
@@ -24,7 +25,7 @@
 }
 
 .welcome-subtext {
-    color: #666;
+    color: #FFFFFF;
     margin: 0;
     font-size: 1.05rem;
 }
@@ -45,7 +46,7 @@
     font-size: 0.95rem;
     text-decoration: none;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .btn-action .material-symbols-outlined {
@@ -56,6 +57,7 @@
     background-color: #1a1a1a;
     color: #fff;
 }
+
 .btn-action.primary:hover {
     background-color: #333;
     transform: translateY(-2px);
@@ -65,17 +67,18 @@
     background-color: #f3f4f6;
     color: #1a1a1a;
 }
+
 .btn-action.secondary:hover {
     background-color: #e5e7eb;
     transform: translateY(-2px);
 }
 
 .btn-action.outline {
-    background-color: transparent;
-    border: 2px solid #e5e7eb;
+    background-color: #f3f4f6;
     color: #1a1a1a;
     box-shadow: none;
 }
+
 .btn-action.outline:hover {
     border-color: #1a1a1a;
 }
@@ -95,7 +98,7 @@
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     border: 1px solid #f3f4f6;
     transition: transform 0.2s;
 }
@@ -113,6 +116,7 @@
     justify-content: center;
     flex-shrink: 0;
 }
+
 .stat-icon .material-symbols-outlined {
     font-size: 2rem;
 }
@@ -147,7 +151,7 @@
     background: #fff;
     border-radius: 20px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
     border: 1px solid #f3f4f6;
 }
 
@@ -170,6 +174,7 @@
     text-decoration: none;
     font-weight: 500;
 }
+
 .link-ver-todos:hover {
     color: #1a1a1a;
     text-decoration: underline;
@@ -194,10 +199,11 @@
     border: 1px solid transparent;
     transition: all 0.2s;
 }
+
 .recent-card:hover {
     background: #fff;
     border-color: #e5e7eb;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .recent-avatar {

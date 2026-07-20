@@ -488,7 +488,8 @@
 }
 
 /* ── Inline Add Falta Form ── */
-.falta-form, .aula-form {
+.falta-form,
+.aula-form {
     background-color: white;
     border-radius: 16px;
     padding: 1.5rem;
@@ -791,7 +792,7 @@
     width: 100%;
     padding: 0.85rem;
     background-color: #1a1a1a;
-    color: #1F4E79;
+    color: #FFFFFF;
     border: none;
     border-radius: 12px;
     font-size: 1rem;
@@ -811,6 +812,7 @@
     max-width: 1400px;
     margin: 2rem auto;
 }
+
 /* ── Floating Action Buttons (FAB) ── */
 .fab-button {
     position: fixed;
@@ -840,8 +842,10 @@
 }
 
 .fab-edit {
-    background-color: #3b82f6; /* Blue for editing */
+    background-color: #3b82f6;
+    /* Blue for editing */
 }
+
 .fab-edit:hover {
     background-color: #2563eb;
 }
@@ -857,24 +861,31 @@
 }
 
 .fab-actions-container .fab-button {
-    position: static; /* Let flexbox position them */
-    width: 50px; /* Slightly smaller than the main FAB */
+    position: static;
+    /* Let flexbox position them */
+    width: 50px;
+    /* Slightly smaller than the main FAB */
     height: 50px;
 }
 
 .fab-save {
-    background-color: #10b981; /* Emerald/Green for save */
+    background-color: #10b981;
+    /* Emerald/Green for save */
     width: 60px !important;
     height: 60px !important;
 }
+
 .fab-save:hover {
     background-color: #059669;
 }
 
 .fab-cancel {
-    background-color: #ef4444; /* Red for cancel */
-    align-self: center; /* Center above the save button */
+    background-color: #ef4444;
+    /* Red for cancel */
+    align-self: center;
+    /* Center above the save button */
 }
+
 .fab-cancel:hover {
     background-color: #dc2626;
 }
@@ -884,8 +895,13 @@
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* ── Export Button ── */
@@ -893,7 +909,7 @@
     display: inline-flex;
     align-items: center;
     background-color: #222;
-    color: #1F4E79;
+    color: #FFFFFF;
     padding: 0.6rem 1.4rem;
     border-radius: 10px;
     font-weight: 600;
@@ -1007,7 +1023,7 @@
 
 .btn-view:hover {
     transform: translateX(-3px);
-    box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
 }
 
 /* Save / Cancel buttons */
@@ -1046,8 +1062,11 @@
 /* Danger Zone Modal */
 .custom-modal-overlay {
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
@@ -1062,7 +1081,7 @@
     max-width: 450px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .danger-icon {
@@ -1104,7 +1123,8 @@
     background: #e2e8f0;
 }
 
-.custom-modal-actions .btn-danger, .danger-zone-container .btn-danger {
+.custom-modal-actions .btn-danger,
+.danger-zone-container .btn-danger {
     background: #ef4444;
     color: white;
     border: none;
@@ -1115,7 +1135,8 @@
     transition: background 0.2s, transform 0.2s;
 }
 
-.custom-modal-actions .btn-danger:hover, .danger-zone-container .btn-danger:hover {
+.custom-modal-actions .btn-danger:hover,
+.danger-zone-container .btn-danger:hover {
     background: #dc2626;
     transform: translateY(-2px);
 }

@@ -85,7 +85,7 @@ export default function VerAluno() {
     // Controla o loading e o error durante o fetch
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-
+    // 
     const [isEditing, setIsEditing] = useState(false);
 
     // Guarda os valores iniciais enquanto se edita
@@ -106,9 +106,6 @@ export default function VerAluno() {
     const [originalAdaptacoesOutros, setOriginalAdaptacoesOutros] = useState("");
     const [adaptacoesObservacoes, setAdaptacoesObservacoes] = useState("");
     const [originalAdaptacoesObservacoes, setOriginalAdaptacoesObservacoes] = useState("");
-
-    // Espera q o PUT acabe
-    const [saving, setSaving] = useState(false);
 
 
     // Guarda as presenças do aluno (faltas)
@@ -180,9 +177,7 @@ export default function VerAluno() {
     const [savingAtividade, setSavingAtividade] = useState(false);
 
     // Add-activity inline form (per card)
-    const [addingAtividadeForId, setAddingAtividadeForId] = useState<string | null>(null);
     const [newAtividade, setNewAtividade] = useState({ resumo: '', concluida: false });
-    const [savingNewAtividade, setSavingNewAtividade] = useState(false);
 
     // Adaptacoes Logic
     const canEditAdaptacoes = msai.substring(5).includes('1');
@@ -323,84 +318,7 @@ export default function VerAluno() {
         setMsai(newMsai);
     };
 
-    // Envia os dados para o PUT /api/alunos/:id
-    const handleSave = async () => {
-        if (form.encarregado.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.encarregado.email)) {
-            toast.error('Por favor, insere um e-mail válido para o encarregado de educação.');
-            return;
-        }
 
-        if (form.encarregado.telefone && !/^\+?[0-9\s-]{9,}$/.test(form.encarregado.telefone)) {
-            toast.error('Por favor, insere um número de telefone válido (mínimo 9 dígitos).');
-            return;
-        }
-
-        setSaving(true);
-
-        try {
-            const response = await fetch(`/api/alunos/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
-            });
-            if (!response.ok) throw new Error('Erro ao guardar.');
-
-            // Save MSAI
-            const msaiResponse = await fetch(`/api/msai/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ msai }),
-            });
-            if (!msaiResponse.ok) throw new Error('Erro ao guardar medidas MSAI.');
-
-            // Save Terapias
-            const terapiasResponse = await fetch(`/api/terapias/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(terapias),
-            });
-            if (!terapiasResponse.ok) throw new Error('Erro ao atualizar terapias.');
-
-            // Update Adaptacoes
-            const adaptResponse = await fetch(`/api/adaptacoes/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ adaptacao: adaptacoes, outros: adaptacoesOutros || "N/A", observacoes: adaptacoesObservacoes || "N/A" })
-            });
-            if (!adaptResponse.ok) throw new Error('Erro ao atualizar adaptações.');
-
-            const updated = await response.json();
-            setAluno(updated);
-            setOriginalMsai(msai);
-            setOriginalTerapias(terapias);
-            setOriginalAdaptacoes(adaptacoes);
-            setOriginalAdaptacoesOutros(adaptacoesOutros);
-            setOriginalAdaptacoesObservacoes(adaptacoesObservacoes);
-
-            setIsEditing(false);
-            toast.success('Alterações guardadas com sucesso!');
-
-        } catch (err: any) {
-            toast.error(err.message || 'Erro ao guardar alterações.');
-        } finally {
-            setSaving(false);
-        }
-    };
-
-    // Reseta os valores iniciais e sai do modo de edição
-    const handleCancel = () => {
-        if (aluno) {
-            const formattedDate = aluno.dataNasc ? new Date(aluno.dataNasc).toISOString().split('T')[0] : '';
-            const enc = aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0] : { nome: '', tipo: '', email: '', telefone: '' };
-            setForm({ nome: aluno.nome, turma: aluno.turma, notas: aluno.notas, estrategias: aluno.estrategias || '', foto: aluno.foto || '', dataNasc: formattedDate, diretorTurma: aluno.diretorTurma || '', encarregado: { nome: enc.nome || '', tipo: enc.tipo || '', email: enc.email || '', telefone: enc.telefone || '' } });
-        }
-        setMsai(originalMsai);
-        setTerapias(originalTerapias);
-        setAdaptacoes(originalAdaptacoes);
-        setAdaptacoesOutros(originalAdaptacoesOutros);
-        setAdaptacoesObservacoes(originalAdaptacoesObservacoes);
-        setIsEditing(false);
-    };
 
     // Formats ISO date to DD/MM/YYYY
     const formatDate = (iso: string) =>
@@ -528,38 +446,6 @@ export default function VerAluno() {
         }
     };
 
-    // Adicionar nova atividade a uma aula já existente
-    const handleAddAtividadeToAula = async (presencaId: string) => {
-        if (!newAtividade.resumo.trim()) {
-            toast.error('Por favor, preencha o resumo da atividade.');
-            return;
-        }
-        setSavingNewAtividade(true);
-        try {
-            const atRes = await fetch('/api/atividades', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ resumo: newAtividade.resumo.trim(), concluida: newAtividade.concluida, presencaId }),
-            });
-            if (!atRes.ok) throw new Error('Erro ao criar atividade.');
-            const atData: Atividade = await atRes.json();
-
-            setPresencas(prev => prev.map(p => {
-                if (p.id === presencaId) {
-                    return { ...p, atividades: [...(p.atividades || []), atData] };
-                }
-                return p;
-            }));
-            setAddingAtividadeForId(null);
-            setNewAtividade({ resumo: '', concluida: false });
-            toast.success('Atividade adicionada com sucesso!');
-
-        } catch (err: any) {
-            toast.error((err.message || 'Erro ao adicionar atividade.'));
-        } finally {
-            setSavingNewAtividade(false);
-        }
-    };
 
     // Counts
     const totalAulas = presencas.length;
@@ -597,7 +483,7 @@ export default function VerAluno() {
 
                     {/* Edit actions moved to FAB */}
 
-                    
+
 
                     {/* ── Layout em Duas Colunas ── */}
                     <div className="aluno-two-columns">
@@ -1133,7 +1019,7 @@ export default function VerAluno() {
                                 </div>
                             )}
 
-                            
+
                         </div>
                     </div>
 

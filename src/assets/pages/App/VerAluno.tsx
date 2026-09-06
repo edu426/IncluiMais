@@ -85,27 +85,20 @@ export default function VerAluno() {
     // Controla o loading e o error durante o fetch
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    // 
-    const [isEditing, setIsEditing] = useState(false);
 
     // Guarda os valores iniciais enquanto se edita
     const [form, setForm] = useState({ nome: '', turma: '', notas: '', estrategias: '', foto: '', dataNasc: '', diretorTurma: '', encarregado: { nome: '', tipo: '', email: '', telefone: '' } });
 
     // MSAI State
     const [msai, setMsai] = useState("000000000000000");
-    const [originalMsai, setOriginalMsai] = useState("000000000000000");
+
 
     // Terapias State
     const [terapias, setTerapias] = useState<TerapiasData>(DEFAULT_TERAPIAS);
-    const [originalTerapias, setOriginalTerapias] = useState<TerapiasData>(DEFAULT_TERAPIAS);
 
     // Adaptacoes State
-    const [adaptacoes, setAdaptacoes] = useState("00000000000");
-    const [originalAdaptacoes, setOriginalAdaptacoes] = useState("00000000000");
-    const [adaptacoesOutros, setAdaptacoesOutros] = useState("");
-    const [originalAdaptacoesOutros, setOriginalAdaptacoesOutros] = useState("");
     const [adaptacoesObservacoes, setAdaptacoesObservacoes] = useState("");
-    const [originalAdaptacoesObservacoes, setOriginalAdaptacoesObservacoes] = useState("");
+
 
 
     // Guarda as presenças do aluno (faltas)
@@ -176,29 +169,10 @@ export default function VerAluno() {
     const [editingAtividade, setEditingAtividade] = useState({ resumo: '', concluida: false });
     const [savingAtividade, setSavingAtividade] = useState(false);
 
-    // Add-activity inline form (per card)
-    const [newAtividade, setNewAtividade] = useState({ resumo: '', concluida: false });
+
 
     // Adaptacoes Logic
     const canEditAdaptacoes = msai.substring(5).includes('1');
-
-    useEffect(() => {
-        if (!canEditAdaptacoes && isEditing) {
-            setAdaptacoes("00000000000");
-            setAdaptacoesOutros("");
-            setAdaptacoesObservacoes("");
-        }
-    }, [canEditAdaptacoes, isEditing]);
-
-    const handleAdaptacoesChange = (index: number) => {
-        if (!isEditing || !canEditAdaptacoes) return;
-        const newAdaptacoes = adaptacoes.split('');
-        newAdaptacoes[index] = newAdaptacoes[index] === '1' ? '0' : '1';
-        setAdaptacoes(newAdaptacoes.join(''));
-        if (index === 10 && newAdaptacoes[index] === '0') {
-            setAdaptacoesOutros("");
-        }
-    };
 
     useEffect(() => {
         if (user) {
@@ -240,7 +214,6 @@ export default function VerAluno() {
                     const msaiData = await msaiResponse.json();
                     if (msaiData && msaiData.msai) {
                         setMsai(msaiData.msai);
-                        setOriginalMsai(msaiData.msai);
                     }
                 }
 
@@ -249,19 +222,13 @@ export default function VerAluno() {
                 if (terapiasResponse.ok) {
                     const terapiasData = await terapiasResponse.json();
                     setTerapias(terapiasData);
-                    setOriginalTerapias(terapiasData);
                 }
 
                 // Fetch Adaptacoes
                 const adaptacoesResponse = await fetch(`/api/adaptacoes/${id}`);
                 if (adaptacoesResponse.ok) {
                     const adaptacoesData = await adaptacoesResponse.json();
-                    setAdaptacoes(adaptacoesData.adaptacao || "00000000000");
-                    setOriginalAdaptacoes(adaptacoesData.adaptacao || "00000000000");
-                    setAdaptacoesOutros(adaptacoesData.outros === "N/A" ? "" : (adaptacoesData.outros || ""));
-                    setOriginalAdaptacoesOutros(adaptacoesData.outros === "N/A" ? "" : (adaptacoesData.outros || ""));
                     setAdaptacoesObservacoes(adaptacoesData.observacoes === "N/A" ? "" : (adaptacoesData.observacoes || ""));
-                    setOriginalAdaptacoesObservacoes(adaptacoesData.observacoes === "N/A" ? "" : (adaptacoesData.observacoes || ""));
                 }
             } catch (err: any) {
                 setError(err.message || 'Erro ao carregar dados do aluno.');
@@ -290,34 +257,6 @@ export default function VerAluno() {
         };
         if (id) fetchPresencas();
     }, [id]);
-
-    // Chamado a cada toque no teclado em qualquer campo.
-    // Atualiza apenas o campo alterado dentro do objeto `form`.
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
-
-    const handleEncarregadoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({ ...form, encarregado: { ...form.encarregado, [e.target.name]: e.target.value } });
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setForm(prev => ({ ...prev, foto: reader.result as string }));
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleMsaiChange = (index: number) => {
-        if (!isEditing) return;
-        const newMsai = msai.substring(0, index) + (msai[index] === '1' ? '0' : '1') + msai.substring(index + 1);
-        setMsai(newMsai);
-    };
-
 
 
     // Formats ISO date to DD/MM/YYYY
@@ -475,7 +414,7 @@ export default function VerAluno() {
                         <div>
                             <h1>Ficha do Aluno</h1>
                             <p className="subtitle">
-                                {isEditing ? 'A editar informações do aluno.' : 'Informações detalhadas do aluno selecionado.'}
+                                Informações detalhadas do aluno selecionado.
                             </p>
 
                         </div>
@@ -491,52 +430,31 @@ export default function VerAluno() {
                             {/* ── Student info card ── */}
                             <div className="aluno-card">
                                 <div className="aluno-avatar">
-                                    {aluno.foto && !isEditing ? (
+                                    {aluno.foto ? (
                                         <img src={aluno.foto} alt={`Foto de ${aluno.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                                    ) : form.foto && isEditing ? (
-                                        <img src={form.foto} alt="Preview da Foto" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                                     ) : (
                                         initials
                                     )}
                                 </div>
 
-                                {isEditing && (
-                                    <div className="info-row">
-                                        <span className="info-label">Fotografia</span>
-                                        <input type="file" accept="image/*" onChange={handleFileChange} className="edit-input" style={{ border: 'none', padding: '0' }} />
-                                    </div>
-                                )}
-
                                 <div className="info-row">
                                     <span className="info-label">Nome</span>
-                                    {isEditing
-                                        ? <input className="edit-input" name="nome" value={form.nome} onChange={handleChange} />
-                                        : <span className="info-value">{aluno.nome}</span>
-                                    }
+                                    <span className="info-value">{aluno.nome}</span>
                                 </div>
 
                                 <div className="info-row">
                                     <span className="info-label">Turma</span>
-                                    {isEditing
-                                        ? <input className="edit-input" name="turma" value={form.turma} onChange={handleChange} />
-                                        : <span className="info-value">{aluno.turma}</span>
-                                    }
+                                    <span className="info-value">{aluno.turma}</span>
                                 </div>
 
                                 <div className="info-row">
                                     <span className="info-label">Data de Nascimento</span>
-                                    {isEditing
-                                        ? <input className="edit-input" type="date" name="dataNasc" value={form.dataNasc} onChange={handleChange} />
-                                        : <span className="info-value">{aluno.dataNasc ? `${new Date(aluno.dataNasc).toLocaleDateString('pt-PT')} - ${calculateAge(aluno.dataNasc)} anos` : 'N/A'}</span>
-                                    }
+                                    <span className="info-value">{aluno.dataNasc ? `${new Date(aluno.dataNasc).toLocaleDateString('pt-PT')} - ${calculateAge(aluno.dataNasc)} anos` : 'N/A'}</span>
                                 </div>
 
                                 <div className="info-row">
                                     <span className="info-label">Diretor de Turma</span>
-                                    {isEditing
-                                        ? <input className="edit-input" name="diretorTurma" value={form.diretorTurma} onChange={handleChange} />
-                                        : <span className="info-value">{aluno.diretorTurma || 'N/A'}</span>
-                                    }
+                                    <span className="info-value">{aluno.diretorTurma || 'N/A'}</span>
                                 </div>
 
                                 <div className="info-row">
@@ -548,10 +466,7 @@ export default function VerAluno() {
                                             style={{ fontSize: '0.95rem', color: '#bbb', verticalAlign: 'middle', marginLeft: '5px', cursor: 'help' }}
                                         >info</span>
                                     </span>
-                                    {isEditing
-                                        ? <textarea className="edit-input edit-textarea" name="notas" value={form.notas} onChange={handleChange} />
-                                        : <span className="info-value">{aluno.notas}</span>
-                                    }
+                                    <span className="info-value">{aluno.notas}</span>
                                 </div>
 
                                 <div className="info-row" style={{ marginTop: '0.5rem' }}>
@@ -563,10 +478,7 @@ export default function VerAluno() {
                                             style={{ fontSize: '0.95rem', color: '#bbb', verticalAlign: 'middle', marginLeft: '5px', cursor: 'help' }}
                                         >info</span>
                                     </span>
-                                    {isEditing
-                                        ? <textarea className="edit-input edit-textarea" name="estrategias" value={form.estrategias} onChange={handleChange} placeholder="Descreva as estratégias de intervenção..." />
-                                        : <span className="info-value">{aluno.estrategias || 'Nenhuma estratégia definida.'}</span>
-                                    }
+                                    <span className="info-value">{aluno.estrategias || 'Nenhuma estratégia definida.'}</span>
                                 </div>
 
                             </div>
@@ -600,7 +512,6 @@ export default function VerAluno() {
                                                     [key]: e.target.checked,
                                                     ...(key === 'outros' && !e.target.checked ? { outrosDescricao: null } : {}),
                                                 }))}
-                                                disabled={!isEditing}
                                             />
                                             {' '}{label}
                                         </label>
@@ -615,7 +526,6 @@ export default function VerAluno() {
                                             placeholder={terapias.outros ? 'Descreva a terapia...' : 'Ative "Outros" para editar'}
                                             value={terapias.outrosDescricao || ''}
                                             onChange={e => setTerapias(prev => ({ ...prev, outrosDescricao: e.target.value }))}
-                                            disabled={!isEditing || !terapias.outros}
                                         />
                                     </div>
 
@@ -628,7 +538,6 @@ export default function VerAluno() {
                                             placeholder="Observações gerais sobre as terapias..."
                                             value={terapias.notasTerapia || ''}
                                             onChange={e => setTerapias(prev => ({ ...prev, notasTerapia: e.target.value }))}
-                                            disabled={!isEditing}
                                             rows={3}
                                         />
                                     </div>
@@ -648,27 +557,27 @@ export default function VerAluno() {
                                 <div className="msai-columns">
                                     <div className="msai-column">
                                         <h3>Medidas Universais</h3>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[0] === '1'} onChange={() => handleMsaiChange(0)} disabled={!isEditing} /> a) Diferenciação pedagógica</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[1] === '1'} onChange={() => handleMsaiChange(1)} disabled={!isEditing} />b) Acomodações curriculares</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[2] === '1'} onChange={() => handleMsaiChange(2)} disabled={!isEditing} />c) O enriquecimento curricular</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[3] === '1'} onChange={() => handleMsaiChange(3)} disabled={!isEditing} />d) A promoção do comportamento pró-social</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[4] === '1'} onChange={() => handleMsaiChange(4)} disabled={!isEditing} />e) A intervenção com foco académico ou comportamental em pequenos grupos</label>
+                                        <label className="msai-checkbox">a) Diferenciação pedagógica</label>
+                                        <label className="msai-checkbox">b) Acomodações curriculares</label>
+                                        <label className="msai-checkbox">c) O enriquecimento curricular</label>
+                                        <label className="msai-checkbox">d) A promoção do comportamento pró-social</label>
+                                        <label className="msai-checkbox">e) A intervenção com foco académico ou comportamental em pequenos grupos</label>
                                     </div>
                                     <div className="msai-column">
                                         <h3>Medidas Seletivas</h3>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[5] === '1'} onChange={() => handleMsaiChange(5)} disabled={!isEditing} />a) Os percursos curriculares diferenciados</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[6] === '1'} onChange={() => handleMsaiChange(6)} disabled={!isEditing} />b) As adaptações curriculares não significativas</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[7] === '1'} onChange={() => handleMsaiChange(7)} disabled={!isEditing} />c) Apoio psicopedagógico</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[8] === '1'} onChange={() => handleMsaiChange(8)} disabled={!isEditing} />d) A antecipação e o reforço das aprendizagens</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[9] === '1'} onChange={() => handleMsaiChange(9)} disabled={!isEditing} />e) O apoio tutorial</label>
+                                        <label className="msai-checkbox">a) Os percursos curriculares diferenciados</label>
+                                        <label className="msai-checkbox">b) As adaptações curriculares não significativas</label>
+                                        <label className="msai-checkbox">c) Apoio psicopedagógico</label>
+                                        <label className="msai-checkbox">d) A antecipação e o reforço das aprendizagens</label>
+                                        <label className="msai-checkbox">e) O apoio tutorial</label>
                                     </div>
                                     <div className="msai-column">
                                         <h3>Medidas Adicionais</h3>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[10] === '1'} onChange={() => handleMsaiChange(10)} disabled={!isEditing} />a) A frequência do ano de escolaridade por disciplinas</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[11] === '1'} onChange={() => handleMsaiChange(11)} disabled={!isEditing} />b) As adaptações curriculares significativas</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[12] === '1'} onChange={() => handleMsaiChange(12)} disabled={!isEditing} />c) O plano individual de transição</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[13] === '1'} onChange={() => handleMsaiChange(13)} disabled={!isEditing} />d) O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
-                                        <label className="msai-checkbox"><input type="checkbox" checked={msai[14] === '1'} onChange={() => handleMsaiChange(14)} disabled={!isEditing} />e) O desenvolvimento de competências de autonomia pessoal e social</label>
+                                        <label className="msai-checkbox">a) A frequência do ano de escolaridade por disciplinas</label>
+                                        <label className="msai-checkbox">b) As adaptações curriculares significativas</label>
+                                        <label className="msai-checkbox">c) O plano individual de transição</label>
+                                        <label className="msai-checkbox">d) O desenvolvimento de metodologias e estratégias de ensino estruturado</label>
+                                        <label className="msai-checkbox">e) O desenvolvimento de competências de autonomia pessoal e social</label>
                                     </div>
                                 </div>
                             </div>
@@ -684,34 +593,25 @@ export default function VerAluno() {
                             <div className="encarregado-grid">
                                 <div className="info-row">
                                     <span className="info-label">Nome</span>
-                                    {isEditing
-                                        ? <input className="edit-input" name="nome" value={form.encarregado.nome} onChange={handleEncarregadoChange} placeholder="Ex: Maria Santos" />
-                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].nome : 'N/A'}</span>
-                                    }
+                                    <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].nome : 'N/A'}</span>
                                 </div>
 
                                 <div className="info-row">
                                     <span className="info-label">E-mail</span>
-                                    {isEditing
-                                        ? <input className="edit-input" type="email" name="email" value={form.encarregado.email} onChange={handleEncarregadoChange} placeholder="Ex: maria.santos@email.com" />
-                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].email : 'N/A'}</span>
-                                    }
+                                    <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].email : 'N/A'}</span>
                                 </div>
 
                                 <div className="info-row">
                                     <span className="info-label">Parentesco</span>
-                                    {isEditing
-                                        ? <input className="edit-input" name="tipo" value={form.encarregado.tipo} onChange={handleEncarregadoChange} placeholder="Ex: Mãe, Pai, Tutor" />
-                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].tipo : 'N/A'}</span>
-                                    }
+                                    <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].tipo : 'N/A'}</span>
+
                                 </div>
 
                                 <div className="info-row">
                                     <span className="info-label">Contacto Telefónico</span>
-                                    {isEditing
-                                        ? <input className="edit-input" type="tel" name="telefone" value={form.encarregado.telefone} onChange={handleEncarregadoChange} placeholder="Ex: 912345678" />
-                                        : <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].telefone : 'N/A'}</span>
-                                    }
+
+                                    <span className="info-value">{aluno.Encaregado && aluno.Encaregado.length > 0 ? aluno.Encaregado[0].telefone : 'N/A'}</span>
+
                                 </div>
                             </div>
                         </div>
@@ -731,48 +631,26 @@ export default function VerAluno() {
                             )}
                             <div className="encarregado-grid" style={{ pointerEvents: canEditAdaptacoes ? 'auto' : 'none' }}>
                                 <div className="msai-column" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[0] === '1'} onChange={() => handleAdaptacoesChange(0)} disabled={!isEditing || !canEditAdaptacoes} /> a) A diversificação dos instrumentos de recolha de informação</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[1] === '1'} onChange={() => handleAdaptacoesChange(1)} disabled={!isEditing || !canEditAdaptacoes} /> b) Os enunciados em formatos acessíveis</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[2] === '1'} onChange={() => handleAdaptacoesChange(2)} disabled={!isEditing || !canEditAdaptacoes} /> c) A interpretação em LGP</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[3] === '1'} onChange={() => handleAdaptacoesChange(3)} disabled={!isEditing || !canEditAdaptacoes} /> d) A utilização de produtos de apoio</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[4] === '1'} onChange={() => handleAdaptacoesChange(4)} disabled={!isEditing || !canEditAdaptacoes} /> e) O tempo suplementar para realização da prova</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[5] === '1'} onChange={() => handleAdaptacoesChange(5)} disabled={!isEditing || !canEditAdaptacoes} /> f) A transcrição das respostas</label>
+                                    <label className="msai-checkbox">a) A diversificação dos instrumentos de recolha de informação</label>
+                                    <label className="msai-checkbox">b) Os enunciados em formatos acessíveis</label>
+                                    <label className="msai-checkbox">c) A interpretação em LGP</label>
+                                    <label className="msai-checkbox">d) A utilização de produtos de apoio</label>
+                                    <label className="msai-checkbox">e) O tempo suplementar para realização da prova</label>
+                                    <label className="msai-checkbox">f) A transcrição das respostas</label>
                                 </div>
                                 <div className="msai-column" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[6] === '1'} onChange={() => handleAdaptacoesChange(6)} disabled={!isEditing || !canEditAdaptacoes} /> g) A leitura de enunciados</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[7] === '1'} onChange={() => handleAdaptacoesChange(7)} disabled={!isEditing || !canEditAdaptacoes} /> h) A utilização de sala separada</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[8] === '1'} onChange={() => handleAdaptacoesChange(8)} disabled={!isEditing || !canEditAdaptacoes} /> i) As pausas vigiadas</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[9] === '1'} onChange={() => handleAdaptacoesChange(9)} disabled={!isEditing || !canEditAdaptacoes} /> j) O código de identificação de cores nos enunciados</label>
-                                    <label className="msai-checkbox"><input type="checkbox" checked={adaptacoes[10] === '1'} onChange={() => handleAdaptacoesChange(10)} disabled={!isEditing || !canEditAdaptacoes} /> Outros</label>
-                                    {adaptacoes[10] === '1' && (
-                                        <input
-                                            type="text"
-                                            className="edit-input"
-                                            placeholder="Descreve as outras adaptações..."
-                                            value={adaptacoesOutros}
-                                            onChange={(e) => setAdaptacoesOutros(e.target.value)}
-                                            disabled={!isEditing || !canEditAdaptacoes}
-                                            style={{ marginTop: '0.5rem', width: '100%' }}
-                                        />
-                                    )}
+                                    <label className="msai-checkbox">g) A leitura de enunciados</label>
+                                    <label className="msai-checkbox">h) A utilização de sala separada</label>
+                                    <label className="msai-checkbox">i) As pausas vigiadas</label>
+                                    <label className="msai-checkbox">j) O código de identificação de cores nos enunciados</label>
+                                    <label className="msai-checkbox">Outros</label>
                                 </div>
 
                                 <div className="adaptacoes-observacoes" style={{ gridColumn: '1 / -1', marginTop: '1rem', pointerEvents: canEditAdaptacoes ? 'auto' : 'none' }}>
                                     <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500, color: '#475569' }}>Observações</label>
-                                    {isEditing ? (
-                                        <textarea
-                                            className="edit-input"
-                                            placeholder="Ex: Notas adicionais sobre as adaptações..."
-                                            value={adaptacoesObservacoes}
-                                            onChange={(e) => setAdaptacoesObservacoes(e.target.value)}
-                                            disabled={!canEditAdaptacoes}
-                                            style={{ width: '100%', minHeight: '80px', resize: 'vertical' }}
-                                        />
-                                    ) : (
-                                        <div className="info-value" style={{ minHeight: '80px', padding: '0.75rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', whiteSpace: 'pre-wrap' }}>
-                                            {adaptacoesObservacoes || "Sem observações adicionais."}
-                                        </div>
-                                    )}
+                                    <div className="info-value" style={{ minHeight: '80px', padding: '0.75rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0', whiteSpace: 'pre-wrap' }}>
+                                        {adaptacoesObservacoes || "Sem observações adicionais."}
+                                    </div>
                                 </div>
                             </div>
                         </div>

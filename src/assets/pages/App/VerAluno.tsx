@@ -71,7 +71,7 @@ interface Presenca {
     atividades?: Atividade[];       // relação incluÃ­da pelo backend
 }
 
-export default function EditarAluno() {
+export default function VerAluno() {
     const { user } = useUser();
     const [professorId, setProfessorId] = useState<string | null>(null);
 
@@ -597,21 +597,7 @@ export default function EditarAluno() {
 
                     {/* Edit actions moved to FAB */}
 
-                    {/* ── Floating Action Buttons (FAB) ── */}
-                    {!isEditing ? (
-                        <button className="fab-button fab-edit" onClick={() => setIsEditing(true)} title="Editar Aluno">
-                            <span className="material-symbols-outlined">edit</span>
-                        </button>
-                    ) : (
-                        <div className="fab-actions-container">
-                            <button className="fab-button fab-cancel" onClick={handleCancel} title="Cancelar Edição">
-                                <span className="material-symbols-outlined">close</span>
-                            </button>
-                            <button className="fab-button fab-save" onClick={handleSave} disabled={saving} title="Guardar Alterações">
-                                <span className="material-symbols-outlined">{saving ? 'sync' : 'save'}</span>
-                            </button>
-                        </div>
-                    )}
+                    
 
                     {/* ── Layout em Duas Colunas ── */}
                     <div className="aluno-two-columns">
@@ -1034,40 +1020,6 @@ export default function EditarAluno() {
                                                 )
                                             ))}
 
-                                            {/* Form para adicionar nova atividade */}
-                                            {addingAtividadeForId === p.id ? (
-                                                <div className="atividade-edit-form">
-                                                    <label className="info-label">Resumo da Atividade <span style={{ color: '#e55' }}>*</span></label>
-                                                    <textarea
-                                                        className="edit-input edit-textarea"
-                                                        placeholder="Descreva a atividade proposta..."
-                                                        value={newAtividade.resumo}
-                                                        onChange={e => setNewAtividade(prev => ({ ...prev, resumo: e.target.value }))}
-                                                        rows={2}
-                                                    />
-                                                    <label className="falta-check-label" style={{ marginTop: '0.4rem' }}>
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={newAtividade.concluida}
-                                                            onChange={e => setNewAtividade(prev => ({ ...prev, concluida: e.target.checked }))}
-                                                        />
-                                                        Já concluída
-                                                    </label>
-                                                    <div className="falta-form-actions" style={{ marginTop: '0.5rem' }}>
-                                                        <button className="btn-save" onClick={() => handleAddAtividadeToAula(p.id)} disabled={savingNewAtividade}>
-                                                            {savingNewAtividade ? 'A guardar...' : 'Guardar'}
-                                                        </button>
-                                                        <button className="btn-cancel" onClick={() => { setAddingAtividadeForId(null); setNewAtividade({ resumo: '', concluida: false }); }}>Cancelar</button>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <button
-                                                    className="btn-add-atividade"
-                                                    onClick={() => { setAddingAtividadeForId(p.id); setNewAtividade({ resumo: '', concluida: false }); }}
-                                                >
-                                                    + Atividade
-                                                </button>
-                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -1181,11 +1133,7 @@ export default function EditarAluno() {
                                 </div>
                             )}
 
-                            {!showAulaForm && (
-                                <button className="btn-add-aula" onClick={() => setShowAulaForm(true)}>
-                                    + Registar Aula
-                                </button>
-                            )}
+                            
                         </div>
                     </div>
 

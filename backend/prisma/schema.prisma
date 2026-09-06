@@ -23,6 +23,7 @@ model Alunos {
   notas        String       @default("") /// @encrypted
   estrategias  String       @default("") /// @encrypted
   foto         String?
+  estado       String       @default("1") //1 - ativo 0 - arquivado
   updatedAt    DateTime     @updatedAt
   presenca     Presenca[]
   professor    Professor    @relation(fields: [professorId], references: [id])

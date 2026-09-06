@@ -11,6 +11,7 @@ interface Student {
     notas: string;
     professorId: string;
     foto?: string;
+    estado?: string;
 }
 
 export default function VerTodosAluno() {
@@ -56,6 +57,8 @@ export default function VerTodosAluno() {
             .finally(() => setLoading(false));
     }, [professorId]);
 
+    console.log("Students: ", students);
+
     // Unique list of turmas for the filter dropdown
     const turmas = useMemo(() =>
         [...new Set(students.map(s => s.turma))].sort()
@@ -69,6 +72,12 @@ export default function VerTodosAluno() {
             return matchesName && matchesTurma;
         });
     }, [students, searchQuery, filterTurma]);
+
+    const activeStudents = filteredStudents.filter(s => String(s.estado) !== '0');
+    const archivedStudents = filteredStudents.filter(s => String(s.estado) === '0');
+
+    console.log("Active Students:", activeStudents);
+    console.log("Archived Students:", archivedStudents);
 
     if (loading) {
         return <div className="ver-aluno-loading"> A carregar informações do aluno...</div>;
@@ -127,8 +136,9 @@ export default function VerTodosAluno() {
                     )}
                 </div>
 
+                {/* Active Students */}
                 <div className="alunos-grid">
-                    {filteredStudents.map((student) => {
+                    {activeStudents.map((student) => {
                         const initials = student.nome.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
                         return (
                             <div className="aluno-card-mini" key={student.id}>
@@ -146,7 +156,6 @@ export default function VerTodosAluno() {
                                     <span className="info-value">{student.nome}</span>
                                 </div>
 
-
                                 <div className="info-row">
                                     <span className="info-label">Turma</span>
                                     <span className="info-value">{student.turma}</span>
@@ -158,9 +167,48 @@ export default function VerTodosAluno() {
                         );
                     })}
 
-                    {filteredStudents.length === 0 && (
-                        <p className="faltas-empty">Nenhum aluno encontrado.</p>
+                    {activeStudents.length === 0 && (
+                        <p className="faltas-empty" style={{ gridColumn: '1 / -1' }}>Nenhum aluno ativo encontrado.</p>
                     )}
+                </div>
+
+                {/* Archived Students */}
+                <div style={{ marginTop: '3rem' }}>
+                    <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: '#1a1a1a', borderBottom: '2px solid #e5e7eb', paddingBottom: '0.5rem' }}>Alunos Arquivados</h2>
+                    <div className="alunos-grid">
+                        {archivedStudents.map((student) => {
+                            const initials = student.nome.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+                            return (
+                                <div className="aluno-card-mini" key={student.id} style={{ opacity: 0.8, filter: 'grayscale(0.5)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+                                        <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#1F4E79', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem', color: '#ffffff', overflow: 'hidden' }}>
+                                            {student.foto ? (
+                                                <img src={student.foto} alt={`Foto de ${student.nome}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                initials
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="info-row">
+                                        <span className="info-label">Nome</span>
+                                        <span className="info-value">{student.nome}</span>
+                                    </div>
+
+                                    <div className="info-row">
+                                        <span className="info-label">Turma</span>
+                                        <span className="info-value">{student.turma}</span>
+                                    </div>
+                                    <Link to={`/ver-aluno/${student.id}`} className="btn-view" style={{ textAlign: 'center', display: 'block', marginTop: '1rem', backgroundColor: '#e5e7eb', color: '#1a1a1a' }}>
+                                        Ver Aluno
+                                    </Link>
+                                </div>
+                            );
+                        })}
+
+                        {archivedStudents.length === 0 && (
+                            <p className="faltas-empty" style={{ gridColumn: '1 / -1' }}>Não existem alunos arquivados.</p>
+                        )}
+                    </div>
                 </div>
             </div>
         </IsLoggedIn>

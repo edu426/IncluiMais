@@ -75,8 +75,6 @@ app.post("/api/sync", async (req, res) => {
                   </ul>
                 </div>
               </div>
-              <div style="background: #f9fafb; padding: 20px 32px; border-top: 1px solid #f3f4f6; text-align: center;">
-              </div>
             </div>
           `,
         });
@@ -199,7 +197,7 @@ app.get("/api/alunos/recentes", async (req, res) => {
 // Chamado pelo EditarAluno.tsx quando o utilizador clica em "Guardar" depois de editar
 app.put("/api/alunos/:id", async (req, res) => {
   const { id } = req.params;
-  const { nome, turma, notas, estrategias, foto, dataNasc, diretorTurma, encarregado } = req.body;
+  const { nome, turma, notas, estrategias, foto, dataNasc, diretorTurma, encarregado, estado } = req.body;
 
   // Validar os campos necessários
   if (!nome || !turma || !dataNasc || !diretorTurma) {
@@ -215,6 +213,7 @@ app.put("/api/alunos/:id", async (req, res) => {
         turma,
         notas: notas || "",
         ...(estrategias !== undefined ? { estrategias } : {}),
+        ...(estado !== undefined ? { estado } : {}),
         foto,
         dataNasc: new Date(dataNasc),
         diretorTurma,
@@ -245,9 +244,9 @@ app.get("/api/alunos/detalhe/:id", async (req, res) => {
   const { id } = req.params;
   try {
     // findUnique retorna o aluno que corresponde exatamente a este ID
-    const aluno = await prisma.Alunos.findUnique({ 
-        where: { id },
-        include: { Encaregado: true }
+    const aluno = await prisma.Alunos.findUnique({
+      where: { id },
+      include: { Encaregado: true }
     });
     if (!aluno) return res.status(404).json({ error: "Aluno não encontrado." });
 
